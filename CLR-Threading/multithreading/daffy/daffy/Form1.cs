@@ -20,6 +20,12 @@ namespace daffy
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Thread t = new Thread(DoLongOperation);
+            t.Start();
+        }
+
+        void DoLongOperation()
+        {
             Thread.Sleep(5000);
         }
     }
