@@ -12,12 +12,12 @@ namespace ConcurrencyTestingEFCore.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ConcurrencyTestingEFCoreDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            //optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ConcurrencyTestingEFCoreDb;Trusted_Connection=True;MultipleActiveResultSets=true");
 
             #region EnableRetryOnFailure options
 
-            //optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ConcurrencyTestingEFCoreDb;Trusted_Connection=True;MultipleActiveResultSets=true",
-            //    options => options.EnableRetryOnFailure());
+            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ConcurrencyTestingEFCoreDb;Trusted_Connection=True;MultipleActiveResultSets=true",
+                options => options.EnableRetryOnFailure());
 
             //optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=ConcurrencyTestingEFCoreDb;Trusted_Connection=True;MultipleActiveResultSets=true",
             //    sqlServerOptionsAction: sqlOptions =>

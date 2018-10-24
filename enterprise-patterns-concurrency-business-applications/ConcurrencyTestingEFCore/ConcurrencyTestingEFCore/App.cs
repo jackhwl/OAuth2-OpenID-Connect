@@ -136,7 +136,7 @@ namespace ConcurrencyTestingEFCore
             Console.WriteLine("5. Snapshot");
             Console.WriteLine("6. RepeatableRead with UPDLOCK");
             Console.WriteLine("7. Serializable with UPDLOCK");
-            //Console.WriteLine("8. Serializable with deadlock retry logic");
+            Console.WriteLine("8. Serializable with deadlock retry logic");
             Console.WriteLine("ESC End Program");
             Console.WriteLine("--------------------------------------------");
         }
