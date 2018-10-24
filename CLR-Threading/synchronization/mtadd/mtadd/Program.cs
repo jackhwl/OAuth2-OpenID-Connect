@@ -34,7 +34,7 @@ namespace mtadd
             //Console.ReadLine();
         }
 
-#if (true)
+#if (false)
 // Buggy version.
     static void AddOne()
     {
@@ -51,8 +51,7 @@ namespace mtadd
         {
             Console.WriteLine("[{0}] AddOne called",
                 Thread.CurrentThread.ManagedThreadId);
-            sum++;
-            //Interlocked.Increment(ref sum);
+            Interlocked.Increment(ref sum);
         }
 #endif
     }
