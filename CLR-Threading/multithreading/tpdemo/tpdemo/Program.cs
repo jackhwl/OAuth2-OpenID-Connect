@@ -13,11 +13,10 @@ namespace tpdemo
         static void Main()
         {
             Console.WriteLine("[{0}] Main called", Thread.CurrentThread.ManagedThreadId);
-
-            Thread t = new Thread(SayHello);
-            t.IsBackground = true;
-            t.Start(10);
-            t.Join();
+            for (int n = 0; n < 10; n++)
+            {
+                ThreadPool.QueueUserWorkItem(SayHello, n);
+            }
 
             Console.WriteLine("[{0}] Main done", Thread.CurrentThread.ManagedThreadId);
             Console.ReadLine();
@@ -25,15 +24,11 @@ namespace tpdemo
 
         static void SayHello(object arg)
         {
-            int iterations = (int)arg;
-
-            for (int n = 0; n < iterations; n++)
-            {
-                Console.WriteLine("[{0}] Hello, world {1}! ({2})",
-                    Thread.CurrentThread.ManagedThreadId,
-                    n,
-                    Thread.CurrentThread.IsBackground);
-            }
+            int n = (int) arg;
+            Console.WriteLine("[{0}] Hello, world {1}! ({2})",
+                Thread.CurrentThread.ManagedThreadId,
+                n,
+                Thread.CurrentThread.IsBackground);
         }
     }
 }
