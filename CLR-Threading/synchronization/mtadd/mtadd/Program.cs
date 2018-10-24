@@ -9,7 +9,6 @@ namespace mtadd
 {
     class Program
     {
-        // this version only works(sum=10) when run in single core mathine
         static int sum = 0;
 
         static void Main()
@@ -32,10 +31,10 @@ namespace mtadd
                 Thread.CurrentThread.ManagedThreadId,
                 sum
             );
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
-#if (false)
+#if (true)
 // Buggy version.
     static void AddOne()
     {
