@@ -43,7 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account3.cs" />
+    <Compile Include="Account4.cs" />
+    <None Include="Account3.cs" />
     <Compile Include="Bank.cs" />
     <None Include="Account1.cs" />
     <None Include="Account2.cs" />
