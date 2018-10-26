@@ -97,7 +97,7 @@ namespace AsianOptions
 
 		        }
 		    );
-            T.Start();
+            T.Start(TaskScheduler.FromCurrentSynchronizationContext());
 		}
 
 	}//class
