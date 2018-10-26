@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-
+using System.Threading.Tasks;
 
 namespace AsianOptions
 {
@@ -71,27 +71,33 @@ namespace AsianOptions
 			//
 			// Run simulation to price option:
 			//
-			Random rand = new Random();
-			int start = System.Environment.TickCount;
+		    Task T = new Task(() =>
+		        {
+		            Random rand = new Random();
+		            int start = System.Environment.TickCount;
 
-			double price = AsianOptionsPricing.Simulation(rand, initial, exercise, up, down, interest, periods, sims);
+		            double price = AsianOptionsPricing.Simulation(rand, initial, exercise, up, down, interest, periods, sims);
 
-			int stop = System.Environment.TickCount;
+		            int stop = System.Environment.TickCount;
 
-			double elapsedTimeInSecs = (stop - start) / 1000.0;
+		            double elapsedTimeInSecs = (stop - start) / 1000.0;
 
-			string result = string.Format("{0:C}  [{1:#,##0.00} secs]",
-				price, elapsedTimeInSecs);
+		            string result = string.Format("{0:C}  [{1:#,##0.00} secs]",
+		                price, elapsedTimeInSecs);
 
-			//
-			// Display the results:
-			//
-			this.lstPrices.Items.Insert(0, result);
+		            //
+		            // Display the results:
+		            //
+		            this.lstPrices.Items.Insert(0, result);
 
-			this.spinnerWait.Spin = false;
-			this.spinnerWait.Visibility = System.Windows.Visibility.Collapsed;
+		            this.spinnerWait.Spin = false;
+		            this.spinnerWait.Visibility = System.Windows.Visibility.Collapsed;
 
-			this.cmdPriceOption.IsEnabled = true;
+		            this.cmdPriceOption.IsEnabled = true;
+
+		        }
+		    );
+            T.Start();
 		}
 
 	}//class
