@@ -52,34 +52,16 @@ namespace mutex
                 Thread.CurrentThread.Name, amt,
                 otherAcct.AccountNumber, this.AccountNumber);
 
-            object firstLock;
-            object secondLock;
-
-            ChooseLocks(this, otherAcct, out firstLock, out secondLock);
-
-            lock (firstLock)
+            lock (this._lock)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(20);
 
-                lock (secondLock)
+                lock (otherAcct._lock)
                 {
                     otherAcct.Debit(amt);
                     this.Credit(amt);
                 }
             }
         }
-
-        static void ChooseLocks(BankAccount acctOne, BankAccount acctTwo, out object firstLock, out object secondLock)
-        {
-            if (acctOne.AccountNumber < acctTwo.AccountNumber)
-            {
-                firstLock = acctOne._lock;
-                secondLock = acctTwo._lock;
-            }
-            else
-            {
-                firstLock = acctTwo._lock;
-                secondLock = acctOne._lock;
-            }
-        }
-    }}
+    }
+}
