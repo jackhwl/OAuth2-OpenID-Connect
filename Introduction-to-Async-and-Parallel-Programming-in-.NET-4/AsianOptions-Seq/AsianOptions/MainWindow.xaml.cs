@@ -71,23 +71,27 @@ namespace AsianOptions
 			//
 			// Run simulation to price option:
 			//
+		    string result = "";
 		    Task T = new Task(() =>
-		        {
-		            Random rand = new Random();
-		            int start = System.Environment.TickCount;
+		    {
+		        Random rand = new Random();
+		        int start = System.Environment.TickCount;
 
-		            double price = AsianOptionsPricing.Simulation(rand, initial, exercise, up, down, interest, periods, sims);
+		        double price = AsianOptionsPricing.Simulation(rand, initial, exercise, up, down, interest, periods, sims);
 
-		            int stop = System.Environment.TickCount;
+		        int stop = System.Environment.TickCount;
 
-		            double elapsedTimeInSecs = (stop - start) / 1000.0;
+		        double elapsedTimeInSecs = (stop - start) / 1000.0;
 
-		            string result = string.Format("{0:C}  [{1:#,##0.00} secs]",
-		                price, elapsedTimeInSecs);
+		        result = string.Format("{0:C}  [{1:#,##0.00} secs]",
+		            price, elapsedTimeInSecs);
+		    });
 
-		            //
-		            // Display the results:
-		            //
+		    //
+		    // Display the results:
+		    //
+            Task T2 = T.ContinueWith((antecedent) =>
+                {
 		            this.lstPrices.Items.Insert(0, result);
 
 		            this.spinnerWait.Spin = false;
@@ -95,9 +99,10 @@ namespace AsianOptions
 
 		            this.cmdPriceOption.IsEnabled = true;
 
-		        }
+		        },
+                TaskScheduler.FromCurrentSynchronizationContext()
 		    );
-            T.Start(TaskScheduler.FromCurrentSynchronizationContext());
+            T.Start();
 		}
 
 	}//class
