@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DelegatesAndEvents
 {
-
+    public delegate int BizRulesDelegate(int x, int y);
     class Program
     {
         static void Main(string[] args)
@@ -17,6 +19,13 @@ namespace DelegatesAndEvents
 
             //del1(5, WorkType.Golf);
             //del2(10, WorkType.GenerateReports);
+            BizRulesDelegate addDel = (x, y) => x + y;
+            BizRulesDelegate multiplyDel = (x, y) => x * y;
+
+            var data = new ProcessData();
+            data.Process(2,3, addDel);
+            data.Process(2,3, multiplyDel);
+
             var worker = new Worker();
             //worker.WorkPerformed += new EventHandler<WorkPerformedEventArgs>(Work_WorkPerformed);
             //worker.WorkCompleted += new EventHandler(Work_WorkCompleted);
