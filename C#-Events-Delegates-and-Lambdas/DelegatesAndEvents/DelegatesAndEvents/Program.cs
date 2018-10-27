@@ -18,9 +18,15 @@ namespace DelegatesAndEvents
             //del1(5, WorkType.Golf);
             //del2(10, WorkType.GenerateReports);
             var worker = new Worker();
-            worker.WorkPerformed += new EventHandler<WorkPerformedEventArgs>(Work_WorkPerformed);
-            worker.WorkCompleted += new EventHandler(Work_WorkCompleted);
+            //worker.WorkPerformed += new EventHandler<WorkPerformedEventArgs>(Work_WorkPerformed);
+            //worker.WorkCompleted += new EventHandler(Work_WorkCompleted);
+            // Delegate Inference
+            worker.WorkPerformed += Work_WorkPerformed; 
+            worker.WorkCompleted += Work_WorkCompleted;
+
             worker.DoWork(10, WorkType.GenerateReports);
+            worker.WorkPerformed -= Work_WorkPerformed; 
+            worker.WorkCompleted -= Work_WorkCompleted;
 
             //del1 += del2;
             //del1 += del3;
