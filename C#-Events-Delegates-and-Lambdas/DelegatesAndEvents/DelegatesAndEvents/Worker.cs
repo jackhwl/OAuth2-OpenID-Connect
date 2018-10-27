@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace DelegatesAndEvents
 {
-    public delegate int WorkPerformedHandler(int hours, WorkType workType);
+    //public delegate int WorkPerformedHandler(object sender, WorkPerformedEventArgs e);
 
     public class Worker
     {
-        public event WorkPerformedHandler WorkPerformed;
+        //public event WorkPerformedHandler WorkPerformed;
+        public event EventHandler<WorkPerformedEventArgs> WorkPerformed;
         public event EventHandler WorkCompleted;
 
         public virtual void DoWork(int hours, WorkType workType)
@@ -46,7 +47,7 @@ namespace DelegatesAndEvents
             //}
 
             // method 4 
-            (WorkPerformed as WorkPerformedHandler)?.Invoke(hours, workType);
+            (WorkPerformed as EventHandler<WorkPerformedEventArgs>)?.Invoke(this, new WorkPerformedEventArgs(hours, workType));
 
         }
 
