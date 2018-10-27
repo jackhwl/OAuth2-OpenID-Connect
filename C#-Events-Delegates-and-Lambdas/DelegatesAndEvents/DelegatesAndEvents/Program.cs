@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace DelegatesAndEvents
 {
-    public delegate int WorkPerformedHandler(int hours, WorkType workType);
 
     class Program
     {
@@ -18,8 +17,8 @@ namespace DelegatesAndEvents
 
             //del1(5, WorkType.Golf);
             //del2(10, WorkType.GenerateReports);
-
-            //DoWork(del1);
+            //var worker = new Worker();
+            //worker.DoWork(8, WorkType.GenerateReports);
 
             //del1 += del2;
             //del1 += del3;
