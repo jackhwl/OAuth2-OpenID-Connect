@@ -21,12 +21,15 @@ namespace DelegatesAndEvents
             //worker.WorkPerformed += new EventHandler<WorkPerformedEventArgs>(Work_WorkPerformed);
             //worker.WorkCompleted += new EventHandler(Work_WorkCompleted);
             // Delegate Inference
-            worker.WorkPerformed += Work_WorkPerformed; 
+            worker.WorkPerformed += delegate(object sender, WorkPerformedEventArgs e)
+            {
+                Console.WriteLine(e.Hours + " " + e.WorkType);
+            }; 
             worker.WorkCompleted += Work_WorkCompleted;
 
-            worker.DoWork(10, WorkType.GenerateReports);
-            worker.WorkPerformed -= Work_WorkPerformed; 
-            worker.WorkCompleted -= Work_WorkCompleted;
+            worker.DoWork(4, WorkType.GenerateReports);
+            //worker.WorkPerformed -= Work_WorkPerformed; 
+            //worker.WorkCompleted -= Work_WorkCompleted;
 
             //del1 += del2;
             //del1 += del3;
@@ -40,10 +43,10 @@ namespace DelegatesAndEvents
             Console.ReadLine();
         }
 
-        static void Work_WorkPerformed(object sender, WorkPerformedEventArgs e)
-        {
-            Console.WriteLine(e.Hours + " " + e.WorkType);
-        }
+        //static void Work_WorkPerformed(object sender, WorkPerformedEventArgs e)
+        //{
+        //    Console.WriteLine(e.Hours + " " + e.WorkType);
+        //}
 
         static void Work_WorkCompleted(object sender, EventArgs e)
         {
