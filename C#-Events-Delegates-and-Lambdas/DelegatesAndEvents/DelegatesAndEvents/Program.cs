@@ -22,9 +22,36 @@ namespace DelegatesAndEvents
             BizRulesDelegate addDel = (x, y) => x + y;
             BizRulesDelegate multiplyDel = (x, y) => x * y;
 
+            Func<int, int, int> funcAddDel = (x, y) => x + y;
+            Func<int, int, int> funcMultiplyDel = (x, y) => x * y;
+
+            Action<int, int> myAction = (x, y) => Console.WriteLine(x + y * 2);
+            Action<int, int> mymAction = (x, y) => Console.WriteLine(x * y * 2);
             var data = new ProcessData();
             data.Process(2,3, addDel);
             data.Process(2,3, multiplyDel);
+            data.ProcessAction(2,3,myAction);
+            data.ProcessAction(2,3,mymAction);
+
+            data.ProcessFunc(2,3,funcAddDel);
+            data.ProcessFunc(2,3,funcMultiplyDel);
+
+            var custs = new List<Customer>
+            {
+                new Customer {City = "Phoenix", FirstName = "John", LastName = "Doe", ID = 1},
+                new Customer {City = "Phoenix", FirstName = "Jane", LastName = "Doe", ID = 500},
+                new Customer {City = "Seattle", FirstName = "Suki", LastName = "Pizzoro", ID = 3},
+                new Customer {City = "New Your City", FirstName = "Michelle", LastName = "Smith", ID = 4}
+            };
+
+            var phxCusts = custs
+                .Where(c => c.City == "Phoenix")
+                .OrderBy(c=>c.FirstName);
+
+            foreach (var cust in phxCusts)
+            {
+                Console.WriteLine(cust.FirstName);
+            }
 
             var worker = new Worker();
             //worker.WorkPerformed += new EventHandler<WorkPerformedEventArgs>(Work_WorkPerformed);
