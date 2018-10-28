@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="CommunicatingBetweenControls.UserControls.JobDetails"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="55*"/>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="152*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="7*"/>
+            <ColumnDefinition Width="13*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="ID" Style="{StaticResource TextBlockStyle}" />
+        <TextBlock Grid.Column="1" Text="{Binding ID}" Style="{StaticResource TextBlockStyle}"  />
+
+        <TextBlock Text="Title" Grid.Row="1" Style="{StaticResource TextBlockStyle}" />
+        <TextBlock Text="{Binding Title}" Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBlockStyle}" />
+
+        <TextBlock Text="Start Date" Grid.Row="2" Style="{StaticResource TextBlockStyle}" />
+        <TextBlock Text="{Binding StartDate, StringFormat=d}" Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBlockStyle}" />
+
+        <TextBlock Text="End Date" Grid.Row="3" Style="{StaticResource TextBlockStyle}" />
+        <TextBlock Text="{Binding EndDate, StringFormat=d}" Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBlockStyle}" />
+
+    </Grid>
+</UserControl>
