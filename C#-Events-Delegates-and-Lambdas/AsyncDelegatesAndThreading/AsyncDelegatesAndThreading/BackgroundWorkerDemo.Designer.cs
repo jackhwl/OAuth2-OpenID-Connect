@@ -65,6 +65,9 @@
             // 
             this.MyBackgroundWorker.WorkerReportsProgress = true;
             this.MyBackgroundWorker.WorkerSupportsCancellation = true;
+            this.MyBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.MyBackgroundWorker_DoWork);
+            this.MyBackgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.MyBackgroundWorker_ProgressChanged);
+            this.MyBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.MyBackgroundWorker_RunWorkerCompleted);
             // 
             // OutputLabel
             // 

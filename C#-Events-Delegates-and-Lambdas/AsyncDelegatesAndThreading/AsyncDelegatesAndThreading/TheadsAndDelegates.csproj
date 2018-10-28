@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>ThreadsAndDelegates.AsyncGood</StartupObject>
+    <StartupObject>ThreadsAndDelegates.BackgroundWorkerDemo</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
