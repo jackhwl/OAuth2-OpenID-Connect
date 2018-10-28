@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0D0E29E4-AE37-4058-8159-E7D67C8DDB9C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ThreadsAndDelegates</RootNamespace>
+    <AssemblyName>ThreadsAndDelegates</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>ThreadsAndDelegates.AsyncBad</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AsyncBad.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsyncBad.Designer.cs">
+      <DependentUpon>AsyncBad.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AsyncGood.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsyncGood.Designer.cs">
+      <DependentUpon>AsyncGood.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BackgroundWorkerDemo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BackgroundWorkerDemo.Designer.cs">
+      <DependentUpon>BackgroundWorkerDemo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DirectorySearcher.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DirectorySearcherForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DirectorySearcherForm.Designer.cs">
+      <DependentUpon>DirectorySearcherForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsingAThread.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsingAThread.Designer.cs">
+      <DependentUpon>UsingAThread.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="AsyncBad.resx">
+      <DependentUpon>AsyncBad.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AsyncGood.resx">
+      <DependentUpon>AsyncGood.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BackgroundWorkerDemo.resx">
+      <DependentUpon>BackgroundWorkerDemo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DirectorySearcherForm.resx">
+      <DependentUpon>DirectorySearcherForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UsingAThread.resx">
+      <DependentUpon>UsingAThread.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
