@@ -377,31 +377,32 @@ namespace StockHistory
 			//
 			//   Date (YYYY-MM-DD),Open,High,Low,Close,Volume,Adj Close
 			//
-			DateTime today = DateTime.Now;
+			//DateTime today = DateTime.Now;
 
-			string url = string.Format("http://ichart.finance.yahoo.com/table.csv?s={0}&d={1}&e={2}&f={3}&g=d&a={1}&b={2}&c={4}&ignore=.csv",
-				symbol,
-				today.Month - 1,
-				today.Day - 1,
-				today.Year,
-				today.Year - numYearsOfHistory);
+			//string url = string.Format("http://ichart.finance.yahoo.com/table.csv?s={0}&d={1}&e={2}&f={3}&g=d&a={1}&b={2}&c={4}&ignore=.csv",
+			//	symbol,
+			//	today.Month - 1,
+			//	today.Day - 1,
+			//	today.Year,
+			//	today.Year - numYearsOfHistory);
 
-			//
-			// Fire off web request:
-			//
-			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
-			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
-			WebResponse Response = WebRequestObject.GetResponse();
+			////
+			//// Fire off web request:
+			////
+			//HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			//WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			//WebResponse Response = WebRequestObject.GetResponse();
 
-			//
-			// We have response, now open data stream and process the data:
-			//
+			////
+			//// We have response, now open data stream and process the data:
+			////
 			string dataSource = string.Format("http://finance.yahoo.com, daily Adj Close, {0} years", numYearsOfHistory);
 
-			List<decimal> prices = GetData(Response, new char[] { ',' }, 6 /*Adj Close*/);
+			//List<decimal> prices = GetData(Response, new char[] { ',' }, 6 /*Adj Close*/);
+		    List<decimal> prices = new List<decimal>{100.22m,120.5m,122m,90}; //GetData(Response, new char[] { '\t' }, 4 /*Close*/);
 
-			if (prices.Count == 0)
-				throw new ApplicationException("site returned no data");
+			//if (prices.Count == 0)
+			//	throw new ApplicationException("site returned no data");
 
 			return new StockData(dataSource, prices);
 		}
@@ -417,22 +418,22 @@ namespace StockHistory
 			//
 			//   Date (MM-DD-YYYY)\tOpen\tHigh\tLow\tClose\tVolume\t
 			//
-			string url = string.Format("http://charting.nasdaq.com/ext/charts.dll?2-1-14-0-0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0-5120-03NA000000{0}-&SF:4|5-WD=539-HT=395--XXCL-",
-				symbol);
+			//string url = string.Format("http://charting.nasdaq.com/ext/charts.dll?2-1-14-0-0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0-5120-03NA000000{0}-&SF:4|5-WD=539-HT=395--XXCL-",
+			//	symbol);
 
-			//
-			// Fire off web request:
-			//
-			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
-			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
-			WebResponse Response = WebRequestObject.GetResponse();
+			////
+			//// Fire off web request:
+			////
+			//HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			//WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			//WebResponse Response = WebRequestObject.GetResponse();
 
 			//
 			// We have response, now open data stream and process the data:
 			//
 			string dataSource = string.Format("http://nasdaq.com, daily Close, {0} years", numYearsOfHistory);
 
-			List<decimal> prices = GetData(Response, new char[] { '\t' }, 4 /*Close*/);
+			List<decimal> prices = new List<decimal>{100.22m,120.5m,122m,90}; //GetData(Response, new char[] { '\t' }, 4 /*Close*/);
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
@@ -455,22 +456,23 @@ namespace StockHistory
 			//
 			// NOTE: MSN only provides one year of historical data, and only by week.
 			//
-			string url = string.Format("http://moneycentral.msn.com/investor/charts/chartdl.aspx?C1=0&C2=1&height=258&width=612&CE=0&symbol={0}&filedownloadbt.x=1",
-				symbol);
+			//string url = string.Format("http://moneycentral.msn.com/investor/charts/chartdl.aspx?C1=0&C2=1&height=258&width=612&CE=0&symbol={0}&filedownloadbt.x=1",
+			//	symbol);
 
-			//
-			// Fire off web request:
-			//
-			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
-			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
-			WebResponse Response = WebRequestObject.GetResponse();
+			////
+			//// Fire off web request:
+			////
+			//HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			//WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			//WebResponse Response = WebRequestObject.GetResponse();
 
 			//
 			// We have response, now open data stream and process the data:
 			//
 			string dataSource = "http://moneycentral.msn.com, weekly Close, 1 year";
 
-			List<decimal> prices = GetData(Response, new char[] { ',' }, 4 /*Close*/);
+			//List<decimal> prices = GetData(Response, new char[] { ',' }, 4 /*Close*/);
+		    List<decimal> prices = new List<decimal>{100.22m,120.5m,122m,90}; //GetData(Response, new char[] { '\t' }, 4 /*Close*/);
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
