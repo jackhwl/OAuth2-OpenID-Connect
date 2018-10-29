@@ -15,6 +15,8 @@ namespace ThreadsAndDelegates
     {
         int _Max;
 
+        delegate void StartProcessHandler();
+
         public UsingAThread()
         {
             InitializeComponent();
@@ -30,13 +32,20 @@ namespace ThreadsAndDelegates
         {
             _Max = 100;
             //Start thread
-
+            var t = new Thread(new ThreadStart(StartProcess));
+            t.Start();
             MessageBox.Show("Done with operation!!");
         }
 
         private void StartProcess()
         {
-
+            if (pbStatus.InvokeRequired)
+            {
+                var sph = new StartProcessHandler(StartProcess);
+                this.Invoke(sph);
+            }
+            else
+            {
                 this.Refresh();
                 this.pbStatus.Maximum = _Max;
                 for (int i = 0; i <= _Max; i++)
@@ -45,6 +54,7 @@ namespace ThreadsAndDelegates
                     this.lblOutput.Text = i.ToString();
                     this.pbStatus.Value = i;
                 }
+            }
 
         }
     }
