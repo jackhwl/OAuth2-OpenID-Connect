@@ -122,19 +122,26 @@ namespace StockHistory
 			//
 			// initiate web requests:
 			//
-		    Task t_yahoo, t_nasdaq, t_msn;
-			try
-			{
-				t_yahoo = GetDataFromYahooAsync(symbol, numYearsOfHistory);
-			    t_nasdaq = GetDataFromNasdaqAsync(symbol, numYearsOfHistory);
-			    t_msn = GetDataFromMsnAsync(symbol, numYearsOfHistory);
-			}
-			catch (Exception ex)
-			{
-				string msg = string.Format("Unable to initiate set of web requests ('{0}')", ex.Message);
-				throw new ApplicationException(msg);
-			}
+		    Task<StockData> t_yahoo = Task.Factory.StartNew(() =>
+		    {
+		        StockData yahoo = GetDataFromYahoo(symbol, numYearsOfHistory);
+		        return yahoo;
+		    });
+		    Task<StockData> t_nasdaq = Task.Factory.StartNew(() =>
+		    {
+		        StockData nasdaq = GetDataFromNasdaq(symbol, numYearsOfHistory);
+		        return nasdaq;
+		    });
+		    Task<StockData> t_msn = Task.Factory.StartNew(() =>
+		    {
+		        StockData msn = GetDataFromMsn(symbol, numYearsOfHistory);
+		        return msn;
+		    });
 
+		    Task<StockData>[] tasks = {t_yahoo, t_nasdaq, t_msn};
+		    int index = Task.WaitAny(tasks);
+
+		    return tasks[index].Result;
 			//
 			// wait for first to finish:
 			//
@@ -142,37 +149,37 @@ namespace StockHistory
 			//	handles[i] = (iars[i].AsyncState as RequestState).Done;
 
 			//int index = WaitHandle.WaitAny(handles, 15 * 1000 /*15 secs*/);
-		    int index = Task.WaitAny(new Task[] {t_yahoo, t_nasdaq, t_msn});
+		    //int index = Task.WaitAny(new Task[] {t_yahoo, t_nasdaq, t_msn});
 
-			// 
-			// did *all* the requests timeout?
-			//
-			if (index == WaitHandle.WaitTimeout)  // if so, cancel and throw exception:
-			{
-				foreach (IAsyncResult iar in iars)
-					(iar.AsyncState as RequestState).Request.Abort();
+			//// 
+			//// did *all* the requests timeout?
+			////
+			//if (index == WaitHandle.WaitTimeout)  // if so, cancel and throw exception:
+			//{
+			//	foreach (IAsyncResult iar in iars)
+			//		(iar.AsyncState as RequestState).Request.Abort();
 
-				throw new ApplicationException("all web sites timed out");
-			}
+			//	throw new ApplicationException("all web sites timed out");
+			//}
 
-			//
-			// Otherwise we have a winning request, cancel the others:
-			//
-			IAsyncResult winner = iars[index];
+			////
+			//// Otherwise we have a winning request, cancel the others:
+			////
+			//IAsyncResult winner = iars[index];
 
-			foreach (IAsyncResult iar in iars)  // cancel others:
-				if (iar != winner)
-					(iar.AsyncState as RequestState).Request.Abort();
+			//foreach (IAsyncResult iar in iars)  // cancel others:
+			//	if (iar != winner)
+			//		(iar.AsyncState as RequestState).Request.Abort();
 
-			//
-			// And return the winner's result:
-			//
-			RequestState state = winner.AsyncState as RequestState;
+			////
+			//// And return the winner's result:
+			////
+			//RequestState state = winner.AsyncState as RequestState;
 
-			if (state.Exception == null)  // success!
-				return state.Result;
-			else
-				throw state.Exception;
+			//if (state.Exception == null)  // success!
+			//	return state.Result;
+			//else
+			//	throw state.Exception;
 		}
 
 
@@ -358,6 +365,117 @@ namespace StockHistory
 			//return iar;
 		    TaskCompletionSource<IAsyncResult> tc = new TaskCompletionSource<IAsyncResult>(iar);
 		    return tc.Task;
+		}
+
+		/// <summary>
+		/// Downloads data from Yahoo.
+		/// </summary>
+		private static StockData GetDataFromYahoo(string symbol, int numYearsOfHistory)
+		{
+			//
+			// finance.yahoo.com, data format:
+			//
+			//   Date (YYYY-MM-DD),Open,High,Low,Close,Volume,Adj Close
+			//
+			DateTime today = DateTime.Now;
+
+			string url = string.Format("http://ichart.finance.yahoo.com/table.csv?s={0}&d={1}&e={2}&f={3}&g=d&a={1}&b={2}&c={4}&ignore=.csv",
+				symbol,
+				today.Month - 1,
+				today.Day - 1,
+				today.Year,
+				today.Year - numYearsOfHistory);
+
+			//
+			// Fire off web request:
+			//
+			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			WebResponse Response = WebRequestObject.GetResponse();
+
+			//
+			// We have response, now open data stream and process the data:
+			//
+			string dataSource = string.Format("http://finance.yahoo.com, daily Adj Close, {0} years", numYearsOfHistory);
+
+			List<decimal> prices = GetData(Response, new char[] { ',' }, 6 /*Adj Close*/);
+
+			if (prices.Count == 0)
+				throw new ApplicationException("site returned no data");
+
+			return new StockData(dataSource, prices);
+		}
+
+
+		/// <summary>
+		/// Downloads data from Nasdaq.
+		/// </summary>
+		private static StockData GetDataFromNasdaq(string symbol, int numYearsOfHistory)
+		{
+			//
+			// nasdaq.com, data format:
+			//
+			//   Date (MM-DD-YYYY)\tOpen\tHigh\tLow\tClose\tVolume\t
+			//
+			string url = string.Format("http://charting.nasdaq.com/ext/charts.dll?2-1-14-0-0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0|0,0,0,0,0-5120-03NA000000{0}-&SF:4|5-WD=539-HT=395--XXCL-",
+				symbol);
+
+			//
+			// Fire off web request:
+			//
+			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			WebResponse Response = WebRequestObject.GetResponse();
+
+			//
+			// We have response, now open data stream and process the data:
+			//
+			string dataSource = string.Format("http://nasdaq.com, daily Close, {0} years", numYearsOfHistory);
+
+			List<decimal> prices = GetData(Response, new char[] { '\t' }, 4 /*Close*/);
+
+			if (prices.Count == 0)
+				throw new ApplicationException("site returned no data");
+
+			return new StockData(dataSource, prices);
+		}
+
+
+		/// <summary>
+		/// Downloads data from MSN.
+		/// 
+		/// NOTE: MSN only returns 1 year of data, and weekly, so this result is not preferred.
+		/// </summary>
+		private static StockData GetDataFromMsn(string symbol, int numYearsOfHistory)
+		{
+			//
+			// MSN, data format:
+			//
+			//   Date (MM-DD-YYYY),Open,High,Low,Close,Volume
+			//
+			// NOTE: MSN only provides one year of historical data, and only by week.
+			//
+			string url = string.Format("http://moneycentral.msn.com/investor/charts/chartdl.aspx?C1=0&C2=1&height=258&width=612&CE=0&symbol={0}&filedownloadbt.x=1",
+				symbol);
+
+			//
+			// Fire off web request:
+			//
+			HttpWebRequest WebRequestObject = (HttpWebRequest)HttpWebRequest.Create(url);
+			WebRequestObject.Timeout = 15 * 1000 /*15 secs*/;
+			WebResponse Response = WebRequestObject.GetResponse();
+
+			//
+			// We have response, now open data stream and process the data:
+			//
+			string dataSource = "http://moneycentral.msn.com, weekly Close, 1 year";
+
+			List<decimal> prices = GetData(Response, new char[] { ',' }, 4 /*Close*/);
+
+			if (prices.Count == 0)
+				throw new ApplicationException("site returned no data");
+
+			return new StockData(dataSource, prices);
 		}
 
 
