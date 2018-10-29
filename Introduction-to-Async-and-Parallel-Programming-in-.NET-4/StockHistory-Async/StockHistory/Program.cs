@@ -96,10 +96,10 @@ namespace StockHistory
 			    });
 
 				// Standard error:
-			    Task<double> t_stderr = Task.Factory.StartNew(() =>
+			    Task<double> t_stderr = t_stddev.ContinueWith((antecedent) =>
 			    {
 			        //t_stddev.Wait();
-			        double stderr = t_stddev.Result / Math.Sqrt(N);
+			        double stderr = antecedent.Result / Math.Sqrt(N);
 			        return stderr;
 			    });
 				//
