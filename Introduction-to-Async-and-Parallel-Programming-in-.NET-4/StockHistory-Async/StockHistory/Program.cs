@@ -110,6 +110,8 @@ namespace StockHistory
 			    //t_avg.Wait();
 			    //t_stddev.Wait();
 			    //t_stderr.Wait();
+			    Task[] tasks = {t_min, t_max, t_avg, t_stddev, t_stderr};
+			    Task.WaitAll(tasks);
 
 				Console.WriteLine();
 				Console.WriteLine("** {0} **", symbol);
