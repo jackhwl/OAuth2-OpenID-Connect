@@ -63,7 +63,7 @@ namespace StockHistory
 		    {
 		        Task t_error = Task.Factory.StartNew(() =>
 		        {
-		            int i = 0;
+		            int i = 10;
 		            int j = 10 / i;
 		        });
 
@@ -96,7 +96,7 @@ namespace StockHistory
 		            decimal l_avg = data.Prices.Average();
 		            foreach (decimal value in data.Prices)
 		                sum += Math.Pow(Convert.ToDouble(value - l_avg), 2.0);
-		            int i = 0;
+		            int i = 10;
 		            int j = 10 / i;
 
 		            double stddev = Math.Sqrt(sum / N);

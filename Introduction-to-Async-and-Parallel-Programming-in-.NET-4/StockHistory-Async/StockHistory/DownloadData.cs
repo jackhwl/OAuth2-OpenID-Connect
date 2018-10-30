@@ -26,11 +26,20 @@ namespace StockHistory
 
 	class DownloadData
 	{
+	    static DownloadData()
+	    {
+            TaskScheduler.UnobservedTaskException += new EventHandler<UnobservedTaskExceptionEventArgs>(TaskScheduler_UnobservedTaskException);
+	    }
 
-		/// <summary>
-		/// External method for checking internet access:
-		/// </summary>
-		[DllImport("wininet.dll")]
+        private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            e.SetObserved(); // observe /ignore exception:
+        }
+
+        /// <summary>
+        /// External method for checking internet access:
+        /// </summary>
+        [DllImport("wininet.dll")]
 		private extern static bool InternetGetConnectedState(out int Description, int ReservedValue);
 
 
@@ -139,9 +148,18 @@ namespace StockHistory
 		    });
 
 		    Task<StockData>[] tasks = {t_yahoo, t_nasdaq, t_msn};
-		    int index = Task.WaitAny(tasks);
+            //WaitAllOneByOne
+		    while (tasks.Length > 0)
+		    {
+		        int index = Task.WaitAny(tasks);
+		        Task<StockData> finished = tasks[index];
+		        if (finished.Exception == null) return finished.Result;
+		        tasks = tasks.Where(t => t != finished).ToArray();
+		    }
 
-		    return tasks[index].Result;
+            // if we get here, all tasks failed:
+		    throw new ApplicationException("all web sites timed out");
+
 			//
 			// wait for first to finish:
 			//
@@ -401,9 +419,9 @@ namespace StockHistory
 			//List<decimal> prices = GetData(Response, new char[] { ',' }, 6 /*Adj Close*/);
 		    List<decimal> prices = new List<decimal>{100.22m,120.5m,122m,90}; //GetData(Response, new char[] { '\t' }, 4 /*Close*/);
 
-			//if (prices.Count == 0)
-			//	throw new ApplicationException("site returned no data");
-
+            //if (prices.Count == 0)
+            //	 throw new ApplicationException("testing no data");
+            Thread.Sleep(10000);
 			return new StockData(dataSource, prices);
 		}
 
@@ -437,7 +455,7 @@ namespace StockHistory
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
-
+		    throw new ApplicationException("testing no data");
 			return new StockData(dataSource, prices);
 		}
 
@@ -476,7 +494,7 @@ namespace StockHistory
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
-
+		    throw new ApplicationException("testing no data");
 			return new StockData(dataSource, prices);
 		}
 
