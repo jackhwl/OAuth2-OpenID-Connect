@@ -147,18 +147,45 @@ namespace StockHistory
 		        return msn;
 		    });
 
-		    Task<StockData>[] tasks = {t_yahoo, t_nasdaq, t_msn};
-            //WaitAllOneByOne
-		    while (tasks.Length > 0)
+		    List<Task<StockData>> tasks = new List<Task<StockData>>();
+            tasks.Add(t_yahoo);
+		    tasks.Add(t_nasdaq);
+		    tasks.Add(t_msn);
+		    //Task<StockData>[] tasks = {t_yahoo, t_nasdaq, t_msn};
+
+            //WaitOneByOne pattern: first one that returns without exception
+
+		    StockData result = null;
+		    while (tasks.Count > 0)
 		    {
-		        int index = Task.WaitAny(tasks);
-		        Task<StockData> finished = tasks[index];
-		        if (finished.Exception == null) return finished.Result;
-		        tasks = tasks.Where(t => t != finished).ToArray();
+		        int timeout = 15 * 1000; //15 secs;
+		        int winner = Task.WaitAny(tasks.ToArray(), timeout);
+		        if (winner < 0) break; // timeout!
+                    
+		        Task<StockData> finished = tasks[winner];
+		        if (finished.Exception == null)
+		        {
+		            result = finished.Result;
+                    tasks.RemoveAt(winner);
+                    break;
+		        }
+                tasks.RemoveAt(winner);
+		        //tasks = tasks.Where(t => t != finished).ToArray();
 		    }
+		    //
+		    // did we succeed or fail?  Either way, first cancel any unfinished requests, 
+		    // and then return result or throw exception...
+		    //
+		    foreach (Task t in tasks)  // cancel outstanding requests:
+		        (t.AsyncState as RequestState)?.Request.Abort();
+
+		    if (result != null)  // success!
+		        return result;
+		    else
+		        throw new ApplicationException("all web sites failed");
 
             // if we get here, all tasks failed:
-		    throw new ApplicationException("all web sites timed out");
+		   // throw new ApplicationException("all web sites timed out");
 
 			//
 			// wait for first to finish:
@@ -421,7 +448,7 @@ namespace StockHistory
 
             //if (prices.Count == 0)
             //	 throw new ApplicationException("testing no data");
-            Thread.Sleep(10000);
+            //Thread.Sleep(10000);
 			return new StockData(dataSource, prices);
 		}
 
@@ -455,7 +482,7 @@ namespace StockHistory
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
-		    throw new ApplicationException("testing no data");
+            //throw new ApplicationException("testing no data");
 			return new StockData(dataSource, prices);
 		}
 
@@ -494,7 +521,7 @@ namespace StockHistory
 
 			if (prices.Count == 0)
 				throw new ApplicationException("site returned no data");
-		    throw new ApplicationException("testing no data");
+		    //throw new ApplicationException("testing no data");
 			return new StockData(dataSource, prices);
 		}
 

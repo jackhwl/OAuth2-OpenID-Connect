@@ -33,15 +33,27 @@ namespace StockHistory
 
 		static void Main(string[] args)
 		{
-			String version, platform, symbol;
+			String version, platform, symbolsAsCSV;
 			int numYearsOfHistory;
 
-			ProcessCmdLineArgs(args, out version, out platform, out symbol, out numYearsOfHistory);
+			ProcessCmdLineArgs(args, out version, out platform, out symbolsAsCSV, out numYearsOfHistory);
 
 			//
 			// Process stock symbol:
 			//
-			ProcessStockSymbol(symbol, numYearsOfHistory);
+		    char[] separators = {','};
+		    string[] symbols = symbolsAsCSV.Split(separators);
+            List<Task>  tasks = new List<Task>();
+		    foreach (string symbol in symbols)
+		    {
+		        Task t = Task.Factory.StartNew((arg) =>
+		        {
+		            ProcessStockSymbol((string)arg, numYearsOfHistory);
+		        }, symbol);
+                tasks.Add(t);
+		    }
+
+		    Task.WaitAll(tasks.ToArray());
 
 			Console.WriteLine();
 			Console.WriteLine("** Done **");
@@ -120,30 +132,38 @@ namespace StockHistory
 		        //t_stderr.Wait();
 		        Task[] tasks = {t_min, t_max, t_avg, t_stddev, t_stderr, t_error};
 		        Task.WaitAll(tasks);
-
-		        Console.WriteLine();
-		        Console.WriteLine("** {0} **", symbol);
-		        Console.WriteLine("   Data source:  '{0}'", data.DataSource);
-		        Console.WriteLine("   Data points:   {0:#,##0}", N);
-		        Console.WriteLine("   Min price:    {0:C}", t_min.Result);
-		        Console.WriteLine("   Max price:    {0:C}", t_max.Result);
-		        Console.WriteLine("   Avg price:    {0:C}", t_avg.Result);
-		        Console.WriteLine("   Std dev/err:   {0:0.000} / {1:0.000}", t_stddev.Result, t_stderr.Result);
+		        lock (Console.Out)
+		        {
+		            Console.WriteLine();
+		            Console.WriteLine("** {0} **", symbol);
+		            Console.WriteLine("   Data source:  '{0}'", data.DataSource);
+		            Console.WriteLine("   Data points:   {0:#,##0}", N);
+		            Console.WriteLine("   Min price:    {0:C}", t_min.Result);
+		            Console.WriteLine("   Max price:    {0:C}", t_max.Result);
+		            Console.WriteLine("   Avg price:    {0:C}", t_avg.Result);
+		            Console.WriteLine("   Std dev/err:   {0:0.000} / {1:0.000}", t_stddev.Result, t_stderr.Result);
+		        }
 		    }
 		    catch (AggregateException ae)
 		    {
-                Console.WriteLine();
-		        ae = ae.Flatten();
-		        foreach (var ex in ae.InnerExceptions)
+		        lock (Console.Out)
 		        {
-		            Console.WriteLine("Tasking Error: {0}", ex.Message);
+		            Console.WriteLine();
+		            ae = ae.Flatten();
+		            foreach (var ex in ae.InnerExceptions)
+		            {
+		                Console.WriteLine("Tasking Error: {0}", ex.Message);
+		            }
 		        }
 		    }
 			catch (Exception ex)
 			{
-				Console.WriteLine();
-				Console.WriteLine("** {0} **", symbol);
-				Console.WriteLine("Error: {0}", ex.Message);
+			    lock (Console.Out)
+			    {
+			        Console.WriteLine();
+			        Console.WriteLine("** {0} **", symbol);
+			        Console.WriteLine("Error: {0}", ex.Message);
+			    }
 			}
 		}
 
