@@ -23,26 +23,13 @@ namespace MyLogin
                 return "Login Successful!";
             });
 
-            task.ContinueWith((t) =>
-            {
-                if (t.IsFaulted)
+            task.ConfigureAwait(true)
+                .GetAwaiter()
+                .OnCompleted(() =>
                 {
-                    Dispatcher.Invoke(() =>
-                    {
-                        LoginButton.Content = "Login failed!";
-                        LoginButton.IsEnabled = true;
-                    });
-                }
-                else
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        LoginButton.Content = t.Result;
-                        LoginButton.IsEnabled = true;
-                    });
-                }
-                
-            });
+                    LoginButton.Content = task.Result;
+                    LoginButton.IsEnabled = true;
+                });
         }
     }
 }
