@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace AsianOptions
 {
@@ -27,7 +28,7 @@ namespace AsianOptions
 		/// <returns>The calculated value for an option with the given 
 		/// statistical context using the Monte Carlo method.</returns>
 		///
-		public static double Simulation(Random rand, double initial, double exercise, double up, double down, double interest, long periods, long sims)
+		public static double Simulation(CancellationToken ct, Random rand, double initial, double exercise, double up, double down, double interest, long periods, long sims)
 		{
 			// Risk-neutral probabilities:
 			double piup = (interest - down) / (up - down);
@@ -38,6 +39,11 @@ namespace AsianOptions
 			// Run simulations:
 			for (int index = 0; index < sims; index++)
 			{
+			    if (ct.IsCancellationRequested)
+			    {
+                    // cleanup?
+                    ct.ThrowIfCancellationRequested();
+			    }
 				// Generate one path:
 				double sumPricePath = initial;
 				double previous = initial;
