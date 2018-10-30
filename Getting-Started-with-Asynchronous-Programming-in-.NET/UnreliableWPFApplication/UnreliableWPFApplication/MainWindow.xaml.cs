@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UnreliableWPFApplication.UserControls;
 
 namespace UnreliableWPFApplication
 {
@@ -24,16 +25,28 @@ namespace UnreliableWPFApplication
         private int count = 1;
         public MainWindow()
         {
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             InitializeComponent();
         }
         
         private void RssButton_Click(object sender, RoutedEventArgs e)
         {
+            BusyIndicator.Visibility = Visibility.Visible;
+            RssButton.IsEnabled = false;
             var client = new WebClient();
 
-            var data = client.DownloadString("http://www.filipekberg.se/rss/");
+            //var data = client.DownloadString("http://www.filipekberg.se/rss/");
+            //RssText.Text = data;
 
-            RssText.Text = data;
+            client.DownloadStringAsync(new Uri("http://www.filipekberg.se/rss/"));
+            client.DownloadStringCompleted += Client_DownloadStringCompleted;
+        }
+
+        private void Client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            RssText.Text = e.Result;
+            BusyIndicator.Visibility = Visibility.Hidden;
+            RssButton.IsEnabled = true;
         }
 
         private void CounterButton_Click(object sender, RoutedEventArgs e)
