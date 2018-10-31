@@ -24,6 +24,7 @@ namespace MyLogin
                 var result = await LoginAsync();
 
                 LoginButton.Content = result;
+
                 LoginButton.IsEnabled = true;
                 BusyIndicator.Visibility = Visibility.Hidden;
             }
@@ -59,13 +60,13 @@ namespace MyLogin
                     return "Login Successful!";
                 });
                 
-                var logTask = Task.Delay(2000); //Log the login
+                //var logTask = Task.Delay(2000); //Log the login
                 
-                var purchaseTask = Task.Delay(1000); //Fetch purchases
+                //var purchaseTask = Task.Delay(1000); //Fetch purchases
                 
-                await Task.WhenAll(loginTask, logTask, purchaseTask);
+                //await Task.WhenAll(loginTask, logTask, purchaseTask);
 
-                return loginTask.Result;
+                return await loginTask;
             }
             catch (Exception)
             {

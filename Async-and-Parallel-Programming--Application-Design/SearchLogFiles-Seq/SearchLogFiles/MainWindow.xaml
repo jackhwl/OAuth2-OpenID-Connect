@@ -1,0 +1,61 @@
+﻿<Window x:Class="SearchLogFiles.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:fenestra="clr-namespace:Fenestra;assembly=Fenestra"
+        Title="Search Log Files using Regular Expressions (Sequential Search)" Height="370" Width="525" 
+        Background="LightBlue" FontSize="14"
+        WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow" ResizeMode="CanMinimize"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150" />
+            <ColumnDefinition Width="350" />
+        </Grid.ColumnDefinitions>
+        
+        <Label Grid.Row="0" Grid.Column="0" Margin="10,20,10,10" VerticalContentAlignment="Center">
+            Search Pattern:
+        </Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="txtPattern" Margin="10,20,10,10" 
+                 Background="White" VerticalContentAlignment="Center" BorderBrush="Black">
+            202\.187\.\d{1,3}\.\d{1,3}
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="10,10,10,10">
+            <Label VerticalContentAlignment="Center">
+                Log file(s):
+            </Label>
+            <Button Name="SelectLogFiles"  Width="24" Height="24" HorizontalAlignment="Left" Margin="10,0,0,0"
+                    VerticalContentAlignment="Center" Click="SelectLogFiles_Click">
+                <Image Source="Resources\OpenFolder.png" />
+            </Button>
+        </StackPanel>
+
+        <ListBox Grid.Row="1" Grid.Column="1" Name="lstFiles" Background="White" Margin="10, 10, 10, 10" 
+                 Width="330" Height="100" HorizontalAlignment="Left" BorderBrush="Black" IsEnabled="False" />
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Margin="10,10,10,10" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical">
+                <Button Name="cmdSearch" Width ="48" Height="48" Click="cmdSearch_Click" BorderBrush="Black">
+                    <Image Source="Resources\Search.png" />
+                </Button>
+                <Label HorizontalAlignment="center">
+                    Search
+                </Label>
+            </StackPanel>
+
+            <fenestra:BizzySpinner Name="spinnerWait" Visibility="Collapsed" Width="48" Height="48" Margin="12,-5,0,0" />
+        </StackPanel>
+
+        <Rectangle Grid.Row="2" Grid.Column="1" Height="112" Margin="10,10,10,10" Stroke="Black" Fill="White" />
+        <TextBlock Grid.Row="2" Grid.Column="1" Name="txtblkResults" Height="100" 
+                   Margin="16,20,16,20" Background="LightGreen" Padding="4,4,4,4">
+            ???
+        </TextBlock>
+    </Grid>
+</Window>
