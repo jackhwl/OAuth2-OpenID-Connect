@@ -58,7 +58,11 @@ namespace MyLogin
                     Thread.Sleep(2000);
                     return "Login Successful!";
                 });
-
+                //UI
+                await Task.Delay(2000); //Log the login
+                //UI
+                await Task.Delay(1000); //Fetch purchases
+                //UI
                 return result;
             }
             catch (Exception)
