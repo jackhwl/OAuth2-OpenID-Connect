@@ -14,22 +14,59 @@ namespace MyLogin
             InitializeComponent();
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private async void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            LoginButton.IsEnabled = false;
-            var task = Task.Run(() =>
+            try
             {
-                Thread.Sleep(2000);
-                return "Login Successful!";
-            });
+                LoginButton.IsEnabled = false;
+                BusyIndicator.Visibility = Visibility.Visible;
 
-            task.ConfigureAwait(true)
-                .GetAwaiter()
-                .OnCompleted(() =>
+                var result = await LoginAsync();
+
+                LoginButton.Content = result;
+                LoginButton.IsEnabled = true;
+                BusyIndicator.Visibility = Visibility.Hidden;
+            }
+            catch (Exception )
+            {
+                LoginButton.Content = "Internal error!";
+            }
+            //LoginButton.IsEnabled = false;
+            //var task = Task.Run(() =>
+            //{
+            //    Thread.Sleep(2000);
+            //    return "Login Successful!";
+            //});
+
+            //task.ConfigureAwait(true)
+            //    .GetAwaiter()
+            //    .OnCompleted(() =>
+            //    {
+            //        LoginButton.Content = task.Result;
+            //        LoginButton.IsEnabled = true;
+            //    });
+        }
+
+        private async Task<string> LoginAsync()
+        {
+            // throw new UnauthorizedAccessException();
+            try
+            {
+                var result = await Task.Run(() =>
                 {
-                    LoginButton.Content = task.Result;
-                    LoginButton.IsEnabled = true;
+                    //throw new UnauthorizedAccessException();
+                    Thread.Sleep(2000);
+                    return "Login Successful!";
                 });
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return "Login failed!";
+            }
+
+
         }
     }
 }
