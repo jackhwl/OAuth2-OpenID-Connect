@@ -204,6 +204,7 @@ namespace SearchLogFiles
 			// For each file f, search it:
 			//
             List<Task> tasks = new List<Task>();
+		    var l = new object();
 			foreach (string f in filenames)
 			{
 			    Task t = Task.Factory.StartNew((arg) =>
@@ -226,7 +227,10 @@ namespace SearchLogFiles
 
 			        while (m.Success) // repeat for each successive match:
 			        {
-			            hits++;
+			            lock (l)
+			            {
+			                hits++;
+			            }
 			            m = m.NextMatch();
 			        }
 			    }, f);
