@@ -27,6 +27,7 @@ using System.Windows.Controls;
 
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
@@ -204,7 +205,7 @@ namespace SearchLogFiles
 			// For each file f, search it:
 			//
             List<Task> tasks = new List<Task>();
-		    var l = new object();
+		    //var l = new object();
 			foreach (string f in filenames)
 			{
 			    Task t = Task.Factory.StartNew((arg) =>
@@ -227,10 +228,7 @@ namespace SearchLogFiles
 
 			        while (m.Success) // repeat for each successive match:
 			        {
-			            lock (l)
-			            {
-			                hits++;
-			            }
+			            Interlocked.Increment(ref hits);
 			            m = m.NextMatch();
 			        }
 			    }, f);
