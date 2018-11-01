@@ -203,30 +203,36 @@ namespace SearchLogFiles
 			//
 			// For each file f, search it:
 			//
+            List<Task> tasks = new List<Task>();
 			foreach (string f in filenames)
 			{
-				//
-				// read the file:
-				//
-				byte[] bytes = File.ReadAllBytes(f);
+			    Task t = Task.Factory.StartNew(() =>
+			    {
+			        //
+			        // read the file:
+			        //
+			        byte[] bytes = File.ReadAllBytes(f);
 
-				// 
-				// convert to string for RE processing:
-				//
-				string contents = System.Text.Encoding.UTF8.GetString(bytes);
+			        // 
+			        // convert to string for RE processing:
+			        //
+			        string contents = System.Text.Encoding.UTF8.GetString(bytes);
 
-				//
-				// apply pattern repeatedly as a regular expression:
-				//
-				Match m = re.Match(contents);
+			        //
+			        // apply pattern repeatedly as a regular expression:
+			        //
+			        Match m = re.Match(contents);
 
-				while (m.Success)  // repeat for each successive match:
-				{
-					hits++;
-					m = m.NextMatch();
-				}
+			        while (m.Success) // repeat for each successive match:
+			        {
+			            hits++;
+			            m = m.NextMatch();
+			        }
+			    });
+                tasks.Add(t);
 			}
 
+		    Task.WaitAll(tasks.ToArray());
 			//
 			// done, return total # of search hits:
 			//
