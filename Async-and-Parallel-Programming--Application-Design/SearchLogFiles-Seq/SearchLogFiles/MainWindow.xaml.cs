@@ -206,12 +206,13 @@ namespace SearchLogFiles
             List<Task> tasks = new List<Task>();
 			foreach (string f in filenames)
 			{
-			    Task t = Task.Factory.StartNew(() =>
+			    Task t = Task.Factory.StartNew((arg) =>
 			    {
+			        string fn = (string) arg;
 			        //
 			        // read the file:
 			        //
-			        byte[] bytes = File.ReadAllBytes(f);
+			        byte[] bytes = File.ReadAllBytes(fn);
 
 			        // 
 			        // convert to string for RE processing:
@@ -228,7 +229,7 @@ namespace SearchLogFiles
 			            hits++;
 			            m = m.NextMatch();
 			        }
-			    });
+			    }, f);
                 tasks.Add(t);
 			}
 
