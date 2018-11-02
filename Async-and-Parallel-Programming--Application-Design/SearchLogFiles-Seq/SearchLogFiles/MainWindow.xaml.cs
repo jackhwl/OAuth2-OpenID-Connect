@@ -200,7 +200,7 @@ namespace SearchLogFiles
 			//int hits = 0;
 
 			// we apply same reg expr to each file, so create 1 compiled RE and reuse:
-			Regex re = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Multiline);
+			//Regex re = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Multiline);
 
 			//
 			// For each file f, search it:
@@ -228,6 +228,8 @@ namespace SearchLogFiles
 			        //
 			        // apply pattern repeatedly as a regular expression:
 			        //
+			        Regex re = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Multiline);
+
 			        Match m = re.Match(contents);
 
 			        while (m.Success) // repeat for each successive match:
