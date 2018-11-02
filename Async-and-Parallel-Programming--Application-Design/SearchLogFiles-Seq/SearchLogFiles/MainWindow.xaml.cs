@@ -30,6 +30,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using  System.Linq;
 
 
 namespace SearchLogFiles
@@ -239,17 +240,32 @@ namespace SearchLogFiles
                 tasks.Add(t);
 			}
 
-		    Task.WaitAll(tasks.ToArray());
-		    int hits = 0;
-		    foreach (var task in tasks)
-		    {
-		        hits += task.Result;
-		    }
+		    //Task.WaitAll(tasks.ToArray());
+		    //int hits = 0;
+		    //foreach (var task in tasks)
+		    //{
+		    //    hits += task.Result;
+		    //}
+            List<int> results = WaitAllOneByOne(tasks);
+		    int hits = results.AsParallel().Sum();
 			//
 			// done, return total # of search hits:
 			//
 			return hits;
 		}
+
+	    private List<int> WaitAllOneByOne(List<Task<int>> tasks)
+	    {
+	        List<int> results = new List<int>();
+	        while (tasks.Count > 0)
+	        {
+	            int i = Task.WaitAny(tasks.ToArray());
+	            results.Add(tasks[i].Result);
+	            tasks.RemoveAt(i);
+	        }
+
+	        return results;
+	    }
 
 	}//class
 }//namespace
