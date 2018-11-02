@@ -196,7 +196,7 @@ namespace SearchLogFiles
 		/// <returns># of search hits</returns>
 		private int SearchFiles(List<string> filenames, string pattern)
 		{
-			int hits = 0;
+			//int hits = 0;
 
 			// we apply same reg expr to each file, so create 1 compiled RE and reuse:
 			Regex re = new Regex(pattern, RegexOptions.Compiled | RegexOptions.Multiline);
@@ -204,12 +204,13 @@ namespace SearchLogFiles
 			//
 			// For each file f, search it:
 			//
-            List<Task> tasks = new List<Task>();
+            List<Task<int>> tasks = new List<Task<int>>();
 		    //var l = new object();
 			foreach (string f in filenames)
 			{
-			    Task t = Task.Factory.StartNew((arg) =>
+			    Task<int> t = Task.Factory.StartNew<int>((arg) =>
 			    {
+			        int lHits = 0;
 			        string fn = (string) arg;
 			        //
 			        // read the file:
@@ -228,14 +229,22 @@ namespace SearchLogFiles
 
 			        while (m.Success) // repeat for each successive match:
 			        {
-			            Interlocked.Increment(ref hits);
+			            //Interlocked.Increment(ref hits);
+			            lHits++;
 			            m = m.NextMatch();
 			        }
+
+			        return lHits;
 			    }, f);
                 tasks.Add(t);
 			}
 
 		    Task.WaitAll(tasks.ToArray());
+		    int hits = 0;
+		    foreach (var task in tasks)
+		    {
+		        hits += task.Result;
+		    }
 			//
 			// done, return total # of search hits:
 			//
