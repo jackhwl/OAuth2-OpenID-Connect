@@ -221,7 +221,9 @@ namespace SearchLogFiles
 			        // 
 			        // convert to string for RE processing:
 			        //
-			        string contents = System.Text.Encoding.UTF8.GetString(bytes);
+			        //string contents = System.Text.Encoding.UTF8.GetString(bytes);
+			        var encoding = new System.Text.UTF8Encoding();
+			        string contents = encoding.GetString(bytes);
 
 			        //
 			        // apply pattern repeatedly as a regular expression:
