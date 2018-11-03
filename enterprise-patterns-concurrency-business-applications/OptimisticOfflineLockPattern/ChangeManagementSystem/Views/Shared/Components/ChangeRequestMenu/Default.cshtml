@@ -1,0 +1,14 @@
+﻿@model IEnumerable<MenuLink>
+
+<li class="dropdown">
+    <a asp-controller="ChangeRequest" asp-action="List"
+       class="dropdown-toggle" data-toggle="dropdown">Change Requests<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+        @foreach(MenuLink item in Model)
+        {
+            <li>
+                <a asp-controller="@item.ControllerName" asp-action="@item.ControllerAction">@item.DisplayText</a>
+            </li>
+        }
+    </ul>
+</li>

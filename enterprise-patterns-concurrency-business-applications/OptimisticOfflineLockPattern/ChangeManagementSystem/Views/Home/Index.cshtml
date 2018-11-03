@@ -1,0 +1,36 @@
+﻿@model HomeViewModel
+
+<div class="row">
+    <h2>@*Open Change Requests*@</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CR ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Last Modified By</th>
+                <th>Target Date</th>
+                <th># Tasks</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var cr in Model.ChangeRequests)
+            { 
+            <tr>
+                <td>@cr.ID.ToString("D5")</td>
+                <td>@cr.Name</td>
+                <td>@cr.Status</td>
+                <td>@cr.ModifiedBy</td>
+                <td>@cr.TargetDate.ToString("MM/dd/yyyy")</td>
+                <td class="text-center">@cr.ChangeRequestTasks.Count()</td>
+                <td><a asp-controller="ChangeRequest" asp-action="View" asp-route-id="@cr.ID">View</a></td>
+                <td><a asp-controller="ChangeRequest" asp-action="Edit" asp-route-id="@cr.ID">Edit</a></td>
+                <td><a asp-controller="ChangeRequest" asp-action="Delete" asp-route-id="@cr.ID">Delete</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

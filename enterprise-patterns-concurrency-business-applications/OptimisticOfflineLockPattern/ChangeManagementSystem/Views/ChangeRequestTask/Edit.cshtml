@@ -1,0 +1,64 @@
+﻿@model ChangeRequestTask
+
+<h2>Edit Task: @Model.ID for ChangeRequest: @Model.ChangeRequestID</h2>
+<form asp-action="Edit" method="post" class="form-horizontal" role="form">
+    <h4>Edit Task</h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="ID" type="hidden" />
+    <input asp-for="ChangeRequestID" type="hidden" />
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Summary" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <textarea asp-for="Summary" class="form-control"></textarea>
+            <span asp-validation-for="Summary" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CompletedDate" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="CompletedDate" class="form-control" />
+            <span asp-validation-for="CompletedDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <select asp-for="Status" asp-items="Html.GetEnumSelectList<ChangeRequestTask.StatusEnum>()" class="form-control">
+                <option selected="selected" value="">Please Select</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <label asp-for="Modified" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Modified)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="ModifiedBy" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </p>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-5">
+            <input type="submit" class="btn btn-primary" value="Save Task" />
+        </div>
+    </div>
+
+</form>

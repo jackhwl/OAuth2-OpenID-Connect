@@ -1,0 +1,76 @@
+﻿@model ChangeManagementSystem.ViewModels.ChangeRequestSearchViewModel
+
+<div class="row">
+    <h2>Change Requests</h2>
+    <form asp-action="SearchSubmit" method="post">
+        <div class="form-horizontal">
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="@Model.Criteria.Name" class="col-md-3 control-label"></label>
+                        <div class="col-md-5">
+                            <input asp-for="@Model.Criteria.Name" class="form-control" />
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Criteria.Status" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                        <select asp-for="@Model.Criteria.Status" asp-items="Html.GetEnumSelectList<ChangeRequest.StatusEnum>()" class="form-control">
+                            <option selected="selected" value="">Please Select</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="@Model.Criteria.TargetDateStart" class="col-md-3 control-label"></label>
+                        <div class="col-md-3">
+                            <input asp-for="@Model.Criteria.TargetDateStart" class="form-control" />
+                        </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="@Model.Criteria.TargetDateEnd" class="col-md-3 control-label"></label>
+                    <div class="col-md-3">
+                            <input asp-for="@Model.Criteria.TargetDateEnd" class="form-control" />
+                        </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-offset-2 col-md-5">
+                    <input type="submit" class="btn btn-primary" value="Search" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CR ID</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Urgency</th>
+                <th>Owner</th>
+                <th>Target Date</th>
+                <th>Actual Date</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cr in Model.ChangeRequests)
+            {
+                <tr>
+                    <td>@cr.ID</td>
+                    <td>@cr.Name</td>
+                    <td>@cr.Status</td>
+                    <td>@cr.Priority</td>
+                    <td>@cr.Urgency</td>
+                    <td>@cr.Owner</td>
+                    <td>@cr.TargetDate</td>
+                    <td>@cr.ActualDate</td>
+                    <td><a asp-controller="ChangeRequest" asp-action="View" asp-route-id="@cr.ID">View</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
