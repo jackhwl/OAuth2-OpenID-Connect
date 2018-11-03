@@ -35,7 +35,7 @@ namespace LongRunning
 
 			for (int i = 0; i < N; i++)
 			{
-				Task t = CreateOneLongRunningTask(durationInMins, durationInSecs, TaskCreationOptions.None);
+				Task t = CreateOneLongRunningTask(durationInMins, durationInSecs, TaskCreationOptions.LongRunning);
 				tasks.Add(t);
 			}
 
