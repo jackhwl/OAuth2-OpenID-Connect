@@ -35,7 +35,7 @@ namespace ChangeManagementSystem
                 }
             }
 
-            // TelemetryDebugWriter.IsTracingDisabled = true;
+            TelemetryDebugWriter.IsTracingDisabled = true;
 
             host.Run();
         }

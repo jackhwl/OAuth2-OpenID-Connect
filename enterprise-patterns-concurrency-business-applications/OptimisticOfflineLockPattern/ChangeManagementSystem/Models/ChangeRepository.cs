@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ChangeManagementSystem.Models
 {
@@ -98,9 +99,19 @@ namespace ChangeManagementSystem.Models
             cr.ModifiedBy = currentUser;
             cr.Modified = DateTime.Now;
 
-            _appDataContext.Update(cr);
+            //_appDataContext.Update(cr);
+            _appDataContext.ChangeTracker.TrackGraph(cr, e=> UpdateStateOfItems(e));
             
             _appDataContext.SaveChanges();
+        }
+
+        private void UpdateStateOfItems(EntityEntryGraphNode node)
+        {
+            node.Entry.State = EntityState.Modified;
+            if (node.Entry.Entity.GetType() == typeof(ChangeRequestTask))
+            {
+                node.Entry.State = EntityState.Unchanged;
+            }
         }
 
         #endregion
