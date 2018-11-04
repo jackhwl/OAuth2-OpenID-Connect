@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -104,11 +105,13 @@ namespace DotNetMandelbrot
 			//
 			// now start computing Mandelbrot set, row by row:
 			//
-			for (int r = 0; r < _pixels; r++)
+			//for (int r = 0; r < _pixels; r++)
+            Parallel.For(0, _pixels, (r) =>
 			{
 				// Did the user cancel?  If so, stop loop:
-				if (_worker.CancellationPending)
-					break;
+			    if (_worker.CancellationPending)
+			        //break;
+			        return;
 
 				//
 				// Since we need to pass the new pixel values to the UI thread for display,
@@ -117,8 +120,10 @@ namespace DotNetMandelbrot
 				//
 				int[] values = new int[_pixels];  // one row:
 
-				for (int c = 0; c < _pixels; ++c)
-					values[c] = MandelbrotColor(r, c, _y, _x, _size, _pixels);
+				//for (int c = 0; c < _pixels; ++c)
+                Parallel.For(0, _pixels, (c)=>
+					values[c] = MandelbrotColor(r, c, _y, _x, _size, _pixels)
+                );
 
 				//
 				// Set value in last 5 pixels of each row to a thread id so we can "see" who
@@ -133,7 +138,7 @@ namespace DotNetMandelbrot
 				// we've generated a row, report this as progress for display:
 				//
 				_worker.ReportProgress(r, new object[] { r, values });
-			}
+			});
 
 			// did user cancel?  If so, set background worker's flag:
 			if (_worker.CancellationPending)
