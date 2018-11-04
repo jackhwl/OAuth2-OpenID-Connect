@@ -11,9 +11,10 @@ using System;
 namespace ChangeManagementSystem.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20181104130638_ChangeRequestRowVersion")]
+    partial class ChangeRequestRowVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

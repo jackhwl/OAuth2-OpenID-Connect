@@ -1,10 +1,13 @@
-﻿using ChangeManagementSystem.Models;
+﻿using System;
+using ChangeManagementSystem.Models;
 using ChangeManagementSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -103,8 +106,92 @@ namespace ChangeManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(ChangeRequest model)
         {
-            _changeRequestRepository.UpdateChangeRequest(model, _userManager.GetUserName(this.User));
-            return RedirectToAction("Index", "Home");
+            try
+            {
+                _changeRequestRepository.UpdateChangeRequest(model, _userManager.GetUserName(this.User));
+                return RedirectToAction("Index", "Home");
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var exceptionEntry = ex.Entries.Single();
+                if (exceptionEntry.Entity.GetType() == typeof(ChangeRequest))
+                {
+                    var clientValues = (ChangeRequest) exceptionEntry.Entity;
+                    var dbEntry = exceptionEntry.GetDatabaseValues();
+                    if (dbEntry == null)
+                    {
+                        ModelState.AddModelError(string.Empty,
+                            "Unable to save changes. Change Request was deleted by another user.");
+                    }
+                    else
+                    {
+                        var dbValues = (ChangeRequest) dbEntry.ToObject();
+                        if (dbValues.Name != clientValues.Name)
+                        {
+                            ModelState.AddModelError("Name", $"Current Value: {dbValues.Name}");
+                        }
+
+                        if (dbValues.Summary != clientValues.Summary)
+                        {
+                            ModelState.AddModelError("Summary", $"Current Value: {dbValues.Summary}");
+                        }
+
+                        if (dbValues.Status != clientValues.Status)
+                        {
+                            ModelState.AddModelError("Status", $"Current Value: {dbValues.Status}");
+                        }
+
+                        if (dbValues.Priority != clientValues.Priority)
+                        {
+                            ModelState.AddModelError("Priority", $"Current Value: {dbValues.Priority}");
+                        }
+
+                        if (dbValues.Urgency != clientValues.Urgency)
+                        {
+                            ModelState.AddModelError("Urgency", $"Current Value: {dbValues.Urgency}");
+                        }
+
+                        if (dbValues.TargetDate != clientValues.TargetDate)
+                        {
+                            ModelState.AddModelError("TargetDate", $"Current Value: {dbValues.TargetDate}");
+                        }
+
+                        if (dbValues.ActualDate != clientValues.ActualDate)
+                        {
+                            ModelState.AddModelError("ActualDate", $"Current Value: {dbValues.ActualDate}");
+                        }
+
+                        if (dbValues.Owner != clientValues.Owner)
+                        {
+                            ModelState.AddModelError("Owner", $"Current Value: {dbValues.Owner}");
+                        }
+
+                        if (dbValues.Modified != clientValues.Modified)
+                        {
+                            ModelState.AddModelError("Modified", $"Current Value: {dbValues.Modified}");
+                        }
+
+                        if (dbValues.ModifiedBy != clientValues.ModifiedBy)
+                        {
+                            ModelState.AddModelError("ModifiedBy", $"Current Value: {dbValues.ModifiedBy}");
+                        }
+
+                        ModelState.AddModelError(string.Empty, "The record you attempted to edit "
+                                                               + "was modified by another user after you got the original value. The "
+                                                               + "edit operation was cancelled and the current values in the database "
+                                                               + "have been displayed.");
+
+                        model.RowVersion = (byte[]) dbValues.RowVersion;
+                        ModelState.Remove("RowVersion");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "An error occurred saving the record.");
+            }
+
+            return View(model);
         }
 
         #endregion

@@ -4,8 +4,9 @@
 <form asp-action="Edit" method="post" class="form-horizontal" role="form">
     <h4>Edit Change Request</h4>
 
-    <div asp-validation-summary="All" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="ID" type="hidden" />
+    <input asp-for="RowVersion" type="hidden" />
     <div class="form-group">
         <label asp-for="Name" class="col-md-2 control-label"></label>
         <div class="col-md-5">
@@ -31,12 +32,12 @@
     </div>
 
     <div class="form-group">
-            <label asp-for="ActualDate" class="col-md-2 control-label"></label>
-            <div class="col-md-5">
-                <input asp-for="ActualDate" class="form-control" />
-                <span asp-validation-for="ActualDate" class="text-danger"></span>
-            </div>
+        <label asp-for="ActualDate" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="ActualDate" class="form-control" />
+            <span asp-validation-for="ActualDate" class="text-danger"></span>
         </div>
+    </div>
 
     <div class="form-group">
         <label asp-for="Urgency" class="col-md-2 control-label"></label>
@@ -57,7 +58,7 @@
             <span asp-validation-for="Priority" class="text-danger"></span>
         </div>
     </div>
-  
+
     <div class="form-group">
         <label asp-for="Status" class="col-md-2 control-label"></label>
         <div class="col-md-5">
@@ -110,8 +111,8 @@
                 </tr>
             </thead>
             <tbody>
-            @for(var i = 0; i < Model.ChangeRequestTasks.Count; i++)
-            {
+                @for (var i = 0; i < Model.ChangeRequestTasks.Count; i++)
+                {
                     <tr>
                         <td><input asp-for="ChangeRequestTasks[i].ID" type="hidden" />@Model.ChangeRequestTasks[i].ID.ToString("D5")</td>
                         <td><input asp-for="ChangeRequestTasks[i].Name" type="hidden" />@Model.ChangeRequestTasks[i].Name</td>

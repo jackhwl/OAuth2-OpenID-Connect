@@ -58,6 +58,7 @@ namespace ChangeManagementSystem.Models
         public string ModifiedBy { get; set; }
         public DateTime Modified { get; set; }
 
-
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }
