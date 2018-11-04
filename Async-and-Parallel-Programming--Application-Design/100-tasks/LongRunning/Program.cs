@@ -23,8 +23,8 @@ namespace LongRunning
     public static void Main(string[] args)
     {
 			int N = 100;
-			int durationInMins = 5;
-			int durationInSecs = 0;
+			int durationInMins = 0;
+			int durationInSecs = 5;
 
 			Welcome(N, durationInMins, durationInSecs);
 
@@ -32,14 +32,25 @@ namespace LongRunning
 			// Create 100 tasks all at once, and then wait for them to finish:
 			//
 			List<Task> tasks = new List<Task>();
-
-			for (int i = 0; i < N; i++)
+        int numCores = System.Environment.ProcessorCount;
+			for (int i = 0; i < numCores; i++)
 			{
-				Task t = CreateOneLongRunningTask(durationInMins, durationInSecs, TaskCreationOptions.LongRunning);
+				Task t = CreateOneLongRunningTask(durationInMins, durationInSecs, TaskCreationOptions.None);
 				tasks.Add(t);
 			}
 
-			Task.WaitAll(tasks.ToArray());
+			//Task.WaitAll(tasks.ToArray());
+        while (tasks.Count > 0)
+        {
+            int index = Task.WaitAny(tasks.ToArray());
+            tasks.RemoveAt(index);
+            N--;
+            if (N > 0)
+            {
+                Task t = CreateOneLongRunningTask(durationInMins, durationInSecs, TaskCreationOptions.None);
+                tasks.Add(t);
+            }
+        }
 
 			//
 			// done:
