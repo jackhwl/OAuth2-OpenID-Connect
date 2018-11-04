@@ -7,7 +7,9 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
+
 
 
 namespace DotNetMandelbrot
@@ -22,6 +24,7 @@ namespace DotNetMandelbrot
 		private double _y;
 		private double _size;
 		private int _pixels;
+	    private CancellationTokenSource _cts;
 
 		public Mandelbrot(double x, double y, double size, int pixels)
 		{
@@ -106,44 +109,59 @@ namespace DotNetMandelbrot
 			// now start computing Mandelbrot set, row by row:
 			//
 			//for (int r = 0; r < _pixels; r++)
-            Parallel.For(0, _pixels, (r) =>
-			{
-				// Did the user cancel?  If so, stop loop:
-			    if (_worker.CancellationPending)
-			        //break;
-			        return;
+            _cts = new CancellationTokenSource();
+            var options = new ParallelOptions();
+		    options.CancellationToken = _cts.Token;
+		    try
+		    {
+		        Parallel.For(0, _pixels, options, (r) =>
+		        {
+		            // Did the user cancel?  If so, stop loop:
+		            if (_worker.CancellationPending)
+		                //break;
+		                return;
 
-				//
-				// Since we need to pass the new pixel values to the UI thread for display,
-				// we allocate a new array so we can keep running in parallel (versus having
-				// to wait for the array to become available for the next set of values).
-				//
-				int[] values = new int[_pixels];  // one row:
+		            //
+		            // Since we need to pass the new pixel values to the UI thread for display,
+		            // we allocate a new array so we can keep running in parallel (versus having
+		            // to wait for the array to become available for the next set of values).
+		            //
+		            int[] values = new int[_pixels]; // one row:
 
-				//for (int c = 0; c < _pixels; ++c)
-                Parallel.For(0, _pixels, (c)=>
-					values[c] = MandelbrotColor(r, c, _y, _x, _size, _pixels)
-                );
+		            //for (int c = 0; c < _pixels; ++c)
+		            Parallel.For(0, _pixels, options, (c) =>
+		                values[c] = MandelbrotColor(r, c, _y, _x, _size, _pixels)
+		            );
 
-				//
-				// Set value in last 5 pixels of each row to a thread id so we can "see" who
-				// computed this row:
-				//
-				int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId;  // .NET thread id:
+		            //
+		            // Set value in last 5 pixels of each row to a thread id so we can "see" who
+		            // computed this row:
+		            //
+		            int threadID = System.Threading.Thread.CurrentThread.ManagedThreadId; // .NET thread id:
 
-				for (int c = _pixels - 5; c < _pixels; c++)
-					values[c] = -threadID;
+		            for (int c = _pixels - 5; c < _pixels; c++)
+		                values[c] = -threadID;
 
-				//
-				// we've generated a row, report this as progress for display:
-				//
-				_worker.ReportProgress(r, new object[] { r, values });
-			});
+		            //
+		            // we've generated a row, report this as progress for display:
+		            //
+		            _worker.ReportProgress(r, new object[] {r, values});
+		        });
+		    }
+		    catch (OperationCanceledException oce)
+		    {
+                /*ignore*/
+		    }
 
-			// did user cancel?  If so, set background worker's flag:
+		    // did user cancel?  If so, set background worker's flag:
 			if (_worker.CancellationPending)
 				e.Cancel = true;
 		}
+
+	    public void CancelCalulation()
+	    {
+            _cts.Cancel();
+	    }
 
 	}//class
 }//namespace

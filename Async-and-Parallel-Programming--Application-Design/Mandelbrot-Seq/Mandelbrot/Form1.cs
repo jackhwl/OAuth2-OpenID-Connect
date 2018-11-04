@@ -277,7 +277,9 @@ namespace DotNetMandelbrot
 					_goButton.Enabled = false;
 					this.Cursor = Cursors.WaitCursor;
 
-					_worker.CancelAsync();
+					//_worker.CancelAsync();
+				    _mandelbrot.CancelCalulation();
+
 				}
 			}
 			catch (Exception ex)
@@ -396,7 +398,8 @@ namespace DotNetMandelbrot
 		{
 			if (_running)
 			{
-				_worker.CancelAsync();
+				//_worker.CancelAsync();
+                _mandelbrot.CancelCalulation();
 				System.Threading.Thread.Sleep(1000);  // give worker time to process:
 			}
 		}
