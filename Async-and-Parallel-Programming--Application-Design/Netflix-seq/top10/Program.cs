@@ -18,6 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 
 namespace top10
@@ -41,21 +43,23 @@ namespace top10
 			//
 			sw.Restart();
 
-			Dictionary<int, int> ReviewsByUser = new Dictionary<int, int>();
+			ConcurrentDictionary<int, int> ReviewsByUser = new ConcurrentDictionary<int, int>();
 
-			foreach (string line in File.ReadLines(infile))
-			{
-				//
-				// movie id, user id, rating (1..5), date (YYYY-MM-DD)
-				//
-				int userid = parse(line);
+		    //foreach(string line in File.ReadLines(infile))
+		    Parallel.ForEach(File.ReadLines(infile), (line) =>
+		    {
+		        //
+		        // movie id, user id, rating (1..5), date (YYYY-MM-DD)
+		        //
+		        int userid = parse(line);
 
-				if (!ReviewsByUser.ContainsKey(userid))  // first review:
-					ReviewsByUser.Add(userid, 1);
-				else  // another review by same user:
-					ReviewsByUser[userid]++;
-			}
-
+		        //if (!ReviewsByUser.ContainsKey(userid)) // first review:
+		        //    ReviewsByUser.Add(userid, 1);
+		        //else // another review by same user:
+		        //    ReviewsByUser[userid]++;
+		        ReviewsByUser.AddOrUpdate(userid, 1, (usrid, count) => { return count + 1; }
+		        );
+		    });
 			//
 			// Sort pairs by num reviews, descending order, and take top 10:
 			//
