@@ -198,9 +198,17 @@ namespace ChangeManagementSystem.Controllers
 
         #region Delete Change Request
 
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, string rowversion)
         {
-            bool result = await _changeRequestRepository.DeleteChangeRequest(id);
+            var rv = System.Text.Encoding.Unicode.GetBytes(rowversion);
+            bool result = _changeRequestRepository.DeleteChangeRequest(id, rv);
+            if (result == false)
+            {
+                TempData["ConcurrencyErrorMessage"] = "Record " + id.ToString("D5") + " was modified "
+                                                      + "by another user after you got the original value. Please click View to see "
+                                                      + "the latest values, or click the Delete button again to continue deleting "
+                                                      + "the record";
+            }
             return RedirectToAction("List");
         }
 

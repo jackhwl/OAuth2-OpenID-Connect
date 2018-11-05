@@ -15,7 +15,7 @@ namespace ChangeManagementSystem.Models
         IEnumerable<ChangeRequest>  ChangeRequests { get; }
 
         Task<ChangeRequest> GetChangeRequestbyId(int CRId);
-        Task<bool> DeleteChangeRequest(int Id);
+        bool DeleteChangeRequest(int Id, byte[] rv);
 
         ChangeRequest CreateNewChangeRequest();
 

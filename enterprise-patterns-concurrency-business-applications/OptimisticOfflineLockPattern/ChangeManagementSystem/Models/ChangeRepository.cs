@@ -118,24 +118,28 @@ namespace ChangeManagementSystem.Models
 
         #region Delete ChangeRequest
 
-        public async Task<bool> DeleteChangeRequest(int Id)
+        public bool DeleteChangeRequest(int Id, byte[] rv)
         {
-            var cr = await _appDataContext.ChangeRequests
-                .SingleOrDefaultAsync(m => m.ID == Id);
-            if (cr == null)
+            using (var transaction = _appDataContext.Database.BeginTransaction())
             {
-                return false;
-            }
-            try
-            {
+                var cr = _appDataContext.ChangeRequests
+                    .FromSql("SELECT * FROM ChangeRequests WITH (UPDLOCK) WHERE Id= " + Id)
+                    .FirstOrDefault();
+                if (cr == null)
+                {
+                    // record has been deleted by another user
+                    return true;
+                }
+                else if (!cr.RowVersion.SequenceEqual<byte>(rv))
+                {
+                    // record has been modified by another user
+                    return false;
+                }
+
                 _appDataContext.ChangeRequests.Remove(cr);
-                await _appDataContext.SaveChangesAsync();
+                _appDataContext.SaveChanges();
+                transaction.Commit();
                 return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                // log error
-                return false;
             }
         }
 

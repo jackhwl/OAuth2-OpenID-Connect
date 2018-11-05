@@ -2,6 +2,7 @@
 
 <div class="row">
     <h2>Open Change Requests</h2>
+    <p class="text-danger">@TempData["ConcurrencyErrorMessage"]</p>
     <table class="table">
         <thead>
             <tr>
@@ -30,7 +31,9 @@
                     <td>@cr.TargetDate.ToString("MM/dd/yyyy")</td>
                     <td><a asp-controller="ChangeRequest" asp-action="View" asp-route-id="@cr.ID">View</a></td>
                     <td><a asp-controller="ChangeRequest" asp-action="Edit" asp-route-id="@cr.ID">Edit</a></td>
-                    <td><a asp-controller="ChangeRequest" asp-action="Delete" asp-route-id="@cr.ID">Delete</a></td>
+                    <td><a asp-controller="ChangeRequest" asp-action="Delete" asp-route-id="@cr.ID" 
+                           onclick="return confirm('Are you sure you wish to delete this Change Request?');"
+                           asp-route-rowversion="@System.Text.Encoding.Unicode.GetString(cr.RowVersion)">Delete</a></td>
                 </tr>
             }
         </tbody>
