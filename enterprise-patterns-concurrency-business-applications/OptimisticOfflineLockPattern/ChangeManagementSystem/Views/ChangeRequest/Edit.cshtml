@@ -90,7 +90,14 @@
             <input type="submit" class="btn btn-primary" value="Save Change Request" />
         </div>
     </div>
-
+    @{
+        if (TempData["ConcurrencyError"] != null)
+        {
+            <div class="alert alert-warning">
+                @TempData["ConcurrencyError"]
+            </div>
+        }
+    }
     <div class="row">
         <div class="pull-left">
             <a class="btn btn-primary" asp-controller="ChangeRequestTask" asp-action="New" asp-route-ChangeRequestId="@Model.ID">New Task</a>

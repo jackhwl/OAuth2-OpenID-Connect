@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeManagementSystem.Concurrency;
 using Microsoft.AspNetCore.Identity;
 
 namespace ChangeManagementSystem.Controllers
@@ -69,8 +70,19 @@ namespace ChangeManagementSystem.Controllers
         // GET: /<controller>/
         public IActionResult Edit(int id, int changeRequestId)
         {
-            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id);
-            return View(task.Result);
+            //var task = _changeRequestRepository.GetChangeRequestTaskbyId(id);
+            //return View(task.Result);
+            try
+            {
+                var task = _changeRequestRepository.GetChangeRequestTaskByIdForEdit(id,
+                    _userManager.GetUserName(this.User));
+                return View(task);
+            }
+            catch (ConcurrencyException ex)
+            {
+                TempData["ConcurrencyError"] = ex.Message;
+                return RedirectToAction("Edit", "ChangeRequest", new {id = changeRequestId});
+            }
         }
 
         [HttpPost]

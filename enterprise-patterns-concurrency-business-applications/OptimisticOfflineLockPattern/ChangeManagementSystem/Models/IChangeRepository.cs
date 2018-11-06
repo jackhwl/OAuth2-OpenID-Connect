@@ -24,6 +24,7 @@ namespace ChangeManagementSystem.Models
         void UpdateChangeRequest(ChangeRequest cr, string currentUser);
 
         Task<ChangeRequestTask> GetChangeRequestTaskbyId(int taskId);
+        ChangeRequestTask GetChangeRequestTaskByIdForEdit(int id, string currentUser);
 
         int CreateChangeRequestTask(ChangeRequestTask task, string currentUser);
 

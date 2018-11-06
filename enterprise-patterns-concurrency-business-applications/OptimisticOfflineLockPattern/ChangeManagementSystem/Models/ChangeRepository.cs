@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeManagementSystem.Concurrency;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace ChangeManagementSystem.Models
@@ -173,6 +174,41 @@ namespace ChangeManagementSystem.Models
                 .SingleOrDefaultAsync();
         }
 
+        public ChangeRequestTask GetChangeRequestTaskByIdForEdit(int id, string currentUser)
+        {
+            using (var transaction = _appDataContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                try
+                {
+                    LockManager lockManager = new LockManager(_appDataContext);
+                    lockManager.AcquireLock(id, "ChangeRequestTask", currentUser);
+
+                    ChangeRequestTask crt = _appDataContext.ChangeRequestTasks.Where(c => c.ID == id).SingleOrDefault();
+                    if (crt != null)
+                    {
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        throw new ConcurrencyException(
+                            "Entity not found. Entity man have been deleted by another user.");
+                    }
+
+                    return crt;
+                }
+                catch (ConcurrencyException ex)
+                {
+                    transaction.Rollback();
+                    string newMessage = ex.Message.Replace("Entity", "Change Request Task " + id.ToString("D5"));
+                    throw new ConcurrencyException(newMessage);
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
         #endregion
 
         #region Update ChangeRequestTask
@@ -182,9 +218,38 @@ namespace ChangeManagementSystem.Models
         {
             task.ModifiedBy = currentUser;
             task.Modified = DateTime.Now;
+            using (var transaction = _appDataContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                try
+                {
+                    var lockManager = new LockManager(_appDataContext);
+                    if (lockManager.HasLock(task.ID, "ChangeRequestTask", currentUser))
+                    {
+                        _appDataContext.ChangeRequestTasks.Update(task);
+                        _appDataContext.SaveChanges();
 
-            _appDataContext.ChangeRequestTasks.Update(task);
-            _appDataContext.SaveChanges();
+                        lockManager.ReleaseLock(task.ID, "ChangeRequestTask", currentUser);
+                        transaction.Commit();
+                    }
+                    else
+                    {
+                        throw new ConcurrencyException("User does not have a lock on Entity.  "
+                            + "This may be due to a timeout. "
+                            +"Please reload record and restart editing to prevent overwriting another user's changes.");
+                    }
+                }
+                catch (ConcurrencyException ex)
+                {
+                    transaction.Rollback();
+                    string newMessage = ex.Message.Replace("Entity", "Change Request Task " + task.ID.ToString("D5"));
+                    throw new ConcurrencyException(newMessage);
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
 
         #endregion
