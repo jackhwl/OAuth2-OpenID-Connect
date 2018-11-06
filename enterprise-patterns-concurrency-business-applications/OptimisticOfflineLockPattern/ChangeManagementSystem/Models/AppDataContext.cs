@@ -16,9 +16,11 @@ namespace ChangeManagementSystem.Models
 
         public DbSet<ChangeRequest> ChangeRequests { get; set; }
         public DbSet<ChangeRequestTask> ChangeRequestTasks { get; set; }
+        public DbSet<Lock> Locks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Lock>().HasKey(table => new {table.EntityId, table.EntityName});
             base.OnModelCreating(builder);
         }
     }
