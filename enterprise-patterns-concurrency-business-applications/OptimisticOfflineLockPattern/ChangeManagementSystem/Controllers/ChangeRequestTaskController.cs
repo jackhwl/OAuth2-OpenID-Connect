@@ -91,9 +91,17 @@ namespace ChangeManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                _changeRequestRepository.UpdateChangeRequestTask(task, _userManager.GetUserName(this.User));
-                
-                return RedirectToAction("Edit", "ChangeRequest", new { id = task.ChangeRequestID });
+                try
+                {
+                    _changeRequestRepository.UpdateChangeRequestTask(task, _userManager.GetUserName(this.User));
+
+                    return RedirectToAction("Edit", "ChangeRequest", new {id = task.ChangeRequestID});
+                }
+                catch (ConcurrencyException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                    return View("Edit", task);
+                }
             }
             else
             {
@@ -104,11 +112,41 @@ namespace ChangeManagementSystem.Controllers
 
         #endregion
 
-        public async Task<IActionResult> Delete(int id, int changeRequestId)
+        //public async Task<IActionResult> Delete(int id, int changeRequestId)
+        //{
+        //    bool result = await _changeRequestRepository.DeleteChangeRequestTask(id);
+        //    return RedirectToAction("Edit", "ChangeRequest", new { id = changeRequestId });
+        //}
+
+        public IActionResult Delete(int id, int changeRequestId)
         {
-            bool result = await _changeRequestRepository.DeleteChangeRequestTask(id);
-            return RedirectToAction("Edit", "ChangeRequest", new { id = changeRequestId });
+            try
+            {
+                var task = _changeRequestRepository.GetChangeRequestTaskByIdForEdit(id,
+                    _userManager.GetUserName(this.User));
+                return View(task);
+            }
+            catch (ConcurrencyException ex)
+            {
+                TempData["ConcurrencyError"] = ex.Message;
+                return RedirectToAction("Edit", "ChangeRequest", new {id = changeRequestId});
+            }
         }
 
+        public IActionResult Delete(ChangeRequestTask task)
+        {
+            try
+            {
+                bool result =
+                    _changeRequestRepository.DeleteChangeRequestTask(task.ID, _userManager.GetUserName(this.User));
+            }
+            catch (ConcurrencyException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(task);
+            }
+            return RedirectToAction("Edit", "ChangeRequest", new {id = task.ChangeRequestID});
+
+        }
     }
 }

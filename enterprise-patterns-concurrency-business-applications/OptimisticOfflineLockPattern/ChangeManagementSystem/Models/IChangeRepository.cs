@@ -29,6 +29,7 @@ namespace ChangeManagementSystem.Models
         int CreateChangeRequestTask(ChangeRequestTask task, string currentUser);
 
         void UpdateChangeRequestTask(ChangeRequestTask task, string currentUser);
-        Task<bool> DeleteChangeRequestTask(int Id);
+        //Task<bool> DeleteChangeRequestTask(int Id);
+        bool DeleteChangeRequestTask(int id, string currentUser);
     }
 }

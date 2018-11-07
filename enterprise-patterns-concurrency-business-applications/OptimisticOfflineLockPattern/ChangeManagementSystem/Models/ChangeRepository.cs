@@ -256,26 +256,68 @@ namespace ChangeManagementSystem.Models
 
         #region Delete ChangeRequestTask
 
-        public async Task<bool> DeleteChangeRequestTask(int Id)
+        public bool DeleteChangeRequestTask(int id, string currentUser)
         {
-            var task = await _appDataContext.ChangeRequestTasks
-                .SingleOrDefaultAsync(m => m.ID == Id);
-            if (task == null)
+            using (var transaction = _appDataContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
-                return false;
-            }
-            try
-            {
-                _appDataContext.ChangeRequestTasks.Remove(task);
-                await _appDataContext.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateException ex)
-            {
-                // log error
-                return false;
+                try
+                {
+                    var lockManager = new LockManager(_appDataContext);
+                    if (lockManager.HasLock(id, "ChangeRequestTask", currentUser))
+                    {
+                        var crt = _appDataContext.ChangeRequestTasks
+                            .FromSql("SELECT * FROM ChangeRequestTasks WITH (UPDLOCK) WHERE Id ={0}", id)
+                            .FirstOrDefault();
+
+                        lockManager.ReleaseLock(crt.ID, "ChangeRequestTask", currentUser);
+
+                        _appDataContext.ChangeRequestTasks.Remove(crt);
+                        _appDataContext.SaveChanges();
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    else
+                    {
+                        throw new ConcurrencyException("User does not have a lock on Entity.  "
+                                                       + "This may be due to a timeout. "
+                                                       +"Please reload record and restart editing to prevent overwriting another user's changes.");
+                    }
+                }
+                catch (ConcurrencyException ex)
+                {
+                    transaction.Rollback();
+                    string newMessage = ex.Message.Replace("Entity", "Change Request Task " + id.ToString("D5"));
+                    throw new ConcurrencyException(newMessage);
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
+
+        //public async Task<bool> DeleteChangeRequestTask(int Id)
+        //{
+        //    var task = await _appDataContext.ChangeRequestTasks
+        //        .SingleOrDefaultAsync(m => m.ID == Id);
+        //    if (task == null)
+        //    {
+        //        return false;
+        //    }
+        //    try
+        //    {
+        //        _appDataContext.ChangeRequestTasks.Remove(task);
+        //        await _appDataContext.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (DbUpdateException ex)
+        //    {
+        //        // log error
+        //        return false;
+        //    }
+        //}
 
         #endregion
 

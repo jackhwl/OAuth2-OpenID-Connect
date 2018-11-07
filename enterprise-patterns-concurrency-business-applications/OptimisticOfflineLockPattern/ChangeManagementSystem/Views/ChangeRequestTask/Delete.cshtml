@@ -1,0 +1,57 @@
+﻿@model ChangeRequestTask
+
+<h2>Task: @Model.ID for ChangeRequest: @Model.ChangeRequestID</h2>
+<form asp-action="Delete" method="post" class="form-horizontal" role="form">
+
+    <input asp-for="ID" type="hidden" />
+    <input asp-for="ChangeRequestID" type="hidden" />
+
+    <div class="row">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Name)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Summary" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Summary)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="CompletedDate" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.CompletedDate)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Status" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Status)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Modified" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Modified)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="ModifiedBy" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.ModifiedBy)
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-3">
+            <input type="submit" class="btn btn-primary" value="Delete Task"/>
+        </div>
+    </div>
+
+
+</form>
