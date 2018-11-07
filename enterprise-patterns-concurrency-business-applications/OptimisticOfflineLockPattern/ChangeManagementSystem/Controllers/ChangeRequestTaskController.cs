@@ -133,6 +133,8 @@ namespace ChangeManagementSystem.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Delete(ChangeRequestTask task)
         {
             try
