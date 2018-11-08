@@ -1,0 +1,50 @@
+﻿@model ChangeRequestTaskViewModel
+
+<h2>Task: @Model.Task.ID for ChangeRequest: @Model.Task.ChangeRequestID</h2>
+<form asp-action="View" method="post" class="form-horizontal" role="form">
+    <input asp-for="Task.ChangeRequestID" type="hidden" />
+    <input asp-for="ReturnView" type="hidden" />
+
+    <div class="row">
+        <label asp-for="Task.Name" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.Name)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Task.Summary" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.Summary)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Task.CompletedDate" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.CompletedDate)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Task.Status" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.Status)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Task.Modified" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.Modified)
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="Task.ModifiedBy" class="col-md-2"></label>
+        <p class="col-md-5">
+            @Html.DisplayFor(model => model.Task.ModifiedBy)
+        </p>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Return" />
+</form>

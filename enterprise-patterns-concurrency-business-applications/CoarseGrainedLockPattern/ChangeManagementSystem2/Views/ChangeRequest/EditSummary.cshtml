@@ -1,0 +1,50 @@
+﻿@model ChangeRequest
+
+<form asp-action="EditSummary" method="post" class="form-horizontal" role="form">
+    <h4>Edit Change Request Summary</h4>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input asp-for="ID" type="hidden" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="Name" class="form-control" readonly />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Summary" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <textarea asp-for="Summary" class="form-control" ></textarea>
+            <span asp-validation-for="Summary" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <label asp-for="Modified" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            <input asp-for="Modified" readonly class="form-control" style="background-color: transparent; border: 0; box-shadow: none" />
+            @*@Html.DisplayFor(model => model.ChangeRequest.Modified)*@
+            <span asp-validation-for="Modified" class="text-danger"></span>
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="ModifiedBy" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            <input asp-for="ModifiedBy" readonly class="form-control" style="background-color: transparent; border: 0; box-shadow: none" />
+            @*@Html.DisplayFor(model => model.ChangeRequest.ModifiedBy)*@
+            <span asp-validation-for="ModifiedBy" class="text-danger"></span>
+        </p>
+    </div>
+    <div class="form-group">
+        <p class="col-md-offset-2 col-md-1">
+            <input type="submit" formaction="EditSummary" formmethod="post" name="Save" style="width:80px" class="btn btn-primary" value="Save" />
+        </p>
+        <p class="col-md-offset-1 col-md-2">
+            <input type="submit" formaction="EditSummary" formmethod="post" name="Cancel" style="width:80px" class="btn btn-primary" value="Cancel" />
+        </p>
+    </div>
+</form>

@@ -1,0 +1,141 @@
+﻿@model ChangeRequestViewModel
+
+<form asp-action="Edit" method="post" class="form-horizontal" role="form">
+    <h4>Edit Change Request</h4>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="ChangeRequest.ID" type="hidden" />
+
+    <div class="form-group">
+        <label asp-for="ChangeRequest.Name" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="ChangeRequest.Name" class="form-control" />
+            <span asp-validation-for="ChangeRequest.Name" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ChangeRequest.Summary" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <textarea asp-for="ChangeRequest.Summary" class="form-control"></textarea>
+            <span asp-validation-for="ChangeRequest.Summary" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ChangeRequest.TargetDate" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <input asp-for="ChangeRequest.TargetDate" class="form-control" />
+            <span asp-validation-for="ChangeRequest.TargetDate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+            <label asp-for="ChangeRequest.ActualDate" class="col-md-2 control-label"></label>
+            <div class="col-md-5">
+                <input asp-for="ChangeRequest.ActualDate" class="form-control" />
+                <span asp-validation-for="ChangeRequest.ActualDate" class="text-danger"></span>
+            </div>
+        </div>
+
+    <div class="form-group">
+        <label asp-for="ChangeRequest.Urgency" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <select asp-for="ChangeRequest.Urgency" asp-items="Html.GetEnumSelectList<ChangeRequest.UrgencyEnum>()" class="form-control">
+                <option selected="selected" value="">Please Select</option>
+            </select>
+            <span asp-validation-for="ChangeRequest.Urgency" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ChangeRequest.Priority" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <select asp-for="ChangeRequest.Priority" asp-items="Html.GetEnumSelectList<ChangeRequest.PriorityEnum>()" class="form-control">
+                <option selected="selected" value="">Please Select</option>
+            </select>
+            <span asp-validation-for="ChangeRequest.Priority" class="text-danger"></span>
+        </div>
+    </div>
+  
+    <div class="form-group">
+        <label asp-for="ChangeRequest.Status" class="col-md-2 control-label"></label>
+        <div class="col-md-5">
+            <select asp-for="ChangeRequest.Status" asp-items="Html.GetEnumSelectList<ChangeRequest.StatusEnum>()" class="form-control">
+                <option selected="selected" value="">Please Select</option>
+            </select>
+            <span asp-validation-for="ChangeRequest.Status" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <label asp-for="ChangeRequest.Modified" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            <input asp-for="ChangeRequest.Modified" readonly class="form-control" style="background-color: transparent; border: 0; box-shadow: none" />
+            <span asp-validation-for="ChangeRequest.Modified" class="text-danger"></span>
+        </p>
+    </div>
+
+    <div class="row">
+        <label asp-for="ChangeRequest.ModifiedBy" class="col-md-2 control-label"></label>
+        <p class="col-md-5">
+            <input asp-for="ChangeRequest.ModifiedBy" readonly class="form-control" style="background-color: transparent; border: 0; box-shadow: none" />
+            <span asp-validation-for="ChangeRequest.ModifiedBy" class="text-danger"></span>
+        </p>
+    </div>
+    <input asp-for="ChangeRequest.Owner" type="hidden" />
+    <div class="form-group">
+        <p class="col-md-offset-2 col-md-1">
+            <input type="submit" class="btn btn-primary" style="width:80px" value="Save" />
+        </p>
+        <p class="col-md-offset-1 col-md-1">
+            <input type="submit" formaction="Cancel" formmethod="post" style="width:80px" class="btn btn-primary" value="Cancel" />
+        </p>
+        <p class="col-md-offset-1 col-md-2">
+            <input type="submit" formaction="NavigateToEditSummary" formmethod="post" style="width:120px" class="btn btn-primary" value="Edit Summary" />
+        </p>
+    </div>
+
+    <div class="row">
+        <div class="pull-left">
+            <a class="btn btn-primary" asp-controller="ChangeRequestTask" asp-action="New" asp-route-ChangeRequestId="@Model.ChangeRequest.ID">New Task</a>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table" style="border-collapse:collapse">
+            <thead>
+                <tr>
+                    <th>Task ID</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Modified By</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @for (var i = 0; i < Model.ChangeRequest.ChangeRequestTasks.Count; i++)
+            {
+                <tr>
+                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ID" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ID.ToString("D5")</td>
+                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Name" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Name</td>
+                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Status" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Status</td>
+                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ModifiedBy" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ModifiedBy</td>
+                    <td><a asp-controller="ChangeRequestTask" asp-action="View" asp-route-id="@Model.ChangeRequest.ChangeRequestTasks[i].ID" asp-route-changeRequestId="@Model.ChangeRequest.ID" asp-route-returnView="Edit">View</a></td>
+                    <td><a asp-controller="ChangeRequestTask" asp-action="Edit" asp-route-id="@Model.ChangeRequest.ChangeRequestTasks[i].ID" asp-route-changeRequestId="@Model.ChangeRequest.ID">Edit</a></td>
+                    <td><a asp-controller="ChangeRequestTask" asp-action="Delete" asp-route-id="@Model.ChangeRequest.ChangeRequestTasks[i].ID" asp-route-changeRequestId="@Model.ChangeRequest.ID">Delete</a></td>
+                    <td>
+                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Summary" type="hidden" />
+                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].CompletedDate" type="hidden" />
+                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].ChangeRequestID" type="hidden" />
+                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Modified" type="hidden" />
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+</form>

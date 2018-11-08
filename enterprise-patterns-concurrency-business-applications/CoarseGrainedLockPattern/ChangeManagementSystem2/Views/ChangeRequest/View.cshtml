@@ -1,0 +1,99 @@
+﻿@model ChangeRequest
+
+
+<h4>View Change Request: @Model.ID.ToString("D5")</h4>
+<div class="row">
+    <label class="col-md-2">Change ID</label>
+    <p class="col-md-5">
+        @Model.ID.ToString("D5")
+    </p>
+</div>
+<div class="row">
+    <label asp-for="Name" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Name)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="Summary" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Summary)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="TargetDate" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.TargetDate)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="ActualDate" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.ActualDate)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="Urgency" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Urgency)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="Priority" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Priority)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="Status" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Status)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="Modified" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.Modified)
+    </p>
+</div>
+
+<div class="row">
+    <label asp-for="ModifiedBy" class="col-md-2"></label>
+    <p class="col-md-5">
+        @Html.DisplayFor(model => model.ModifiedBy)
+    </p>
+</div>
+
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>CR ID</th>
+                <th>Name</th>
+                <th>Summary</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in @Model.ChangeRequestTasks)
+            {
+                <tr>
+                    <td>@task.ID.ToString("D5")</td>
+                    <td>@task.Name</td>
+                    <td>@task.Summary</td>
+                    <td>@task.Status</td>
+                    <td><a asp-controller="ChangeRequestTask" asp-action="View" asp-route-id="@task.ID" asp-route-changeRequestId="@Model.ID" asp-route-returnView="View">View</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return</a>
