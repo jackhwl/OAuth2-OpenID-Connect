@@ -16,6 +16,7 @@ namespace ChangeManagementSystem.Models
 
         public DbSet<ChangeRequest> ChangeRequests { get; set; }
         public DbSet<ChangeRequestTask> ChangeRequestTasks { get; set; }
+        public DbSet<Version> Versions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

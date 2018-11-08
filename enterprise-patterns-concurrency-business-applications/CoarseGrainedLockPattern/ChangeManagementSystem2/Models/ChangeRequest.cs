@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChangeManagementSystem.Models
 {
-    public class ChangeRequest : EntityBase
+    public class ChangeRequest : EntityBase, ISharedLockable
     {
         public enum UrgencyEnum
         {
@@ -53,5 +53,7 @@ namespace ChangeManagementSystem.Models
    
         public string Owner { get; set; }
 
+        public int SharedVersionId { get; set; }
+        public Version SharedVersion { get; set; }
     }
 }

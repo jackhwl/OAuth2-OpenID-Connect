@@ -11,6 +11,10 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input asp-for="ChangeRequest.ID" type="hidden" />
     <input asp-for="TaskId" id="taskId" type="hidden" />
+    <input asp-for="ChangeRequest.SharedVersionId" type="hidden" />
+    <input asp-for="ChangeRequest.SharedVersion.ID" type="hidden" />
+    <input asp-for="ChangeRequest.SharedVersion.RowVersion" type="hidden" />
+
     <input asp-for="TaskModifiedTime" id="taskModifiedTime" type="hidden" />
 
     <div class="form-group">
@@ -105,7 +109,7 @@
 
     <div class="row">
         <div class="pull-left">
-            <input class="btn btn-primary" type="submit" name="createTask" formaction="NewChangeRequestTask" formmethod="post" value="New Task"/>
+            <input class="btn btn-primary" type="submit" name="createTask" formaction="NewChangeRequestTask" formmethod="post" value="New Task" />
         </div>
     </div>
     <div class="row">
@@ -125,21 +129,21 @@
             <tbody>
                 @for (var i = 0; i < Model.ChangeRequest.ChangeRequestTasks.Count; i++)
                 {
-                <tr style="@(Model.ChangeRequest.ChangeRequestTasks[i].State == TrackedEntityState.Deleted?"display:none":"display:")">
-                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ID" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ID.ToString("D5")</td>
-                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Name" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Name</td>
-                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Status" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Status</td>
-                    <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ModifiedBy" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ModifiedBy</td>
-                    <td><input type="submit" formaction="ViewChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="view@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="View" /></td>
-                    <td><input type="submit" formaction="EditwChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="edit@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="Edit" /></td>
-                    <td><input type="submit" formaction="DeleteChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="delete@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="Delete" /></td>
-                    <td>
-                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Summary" type="hidden" />
-                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].CompletedDate" type="hidden" />
-                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].ChangeRequestID" type="hidden" />
-                        <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Modified" type="hidden" />
-                    </td>
-                </tr>
+                    <tr style="@(Model.ChangeRequest.ChangeRequestTasks[i].State == TrackedEntityState.Deleted?"display:none":"display:")">
+                        <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ID" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ID.ToString("D5")</td>
+                        <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Name" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Name</td>
+                        <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].Status" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].Status</td>
+                        <td><input asp-for="ChangeRequest.ChangeRequestTasks[i].ModifiedBy" type="hidden" />@Model.ChangeRequest.ChangeRequestTasks[i].ModifiedBy</td>
+                        <td><input type="submit" formaction="ViewChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="view@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="View" /></td>
+                        <td><input type="submit" formaction="EditwChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="edit@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="Edit" /></td>
+                        <td><input type="submit" formaction="DeleteChangeRequestTask" formmethod="post" onclick="SetTaskAction(@Model.ChangeRequest.ChangeRequestTasks[i].ID, '@Model.ChangeRequest.ChangeRequestTasks[i].Modified')" id="delete@Model.ChangeRequest.ChangeRequestTasks[i].ID" value="Delete" /></td>
+                        <td>
+                            <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Summary" type="hidden" />
+                            <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].CompletedDate" type="hidden" />
+                            <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].ChangeRequestID" type="hidden" />
+                            <input asp-for="@Model.ChangeRequest.ChangeRequestTasks[i].Modified" type="hidden" />
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

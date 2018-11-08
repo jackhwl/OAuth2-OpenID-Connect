@@ -29,7 +29,11 @@ namespace ChangeManagementSystem.Models
                 Status = ChangeRequest.StatusEnum.inProgress,
                 Urgency = ChangeRequest.UrgencyEnum.medium,
             };
-
+            cr1.SharedVersion = new Version
+            {
+                Modified = DateTime.Now,
+                ModifiedBy = "admin@changemanagement.com"
+            };
 
             var crt1 = new ChangeRequestTask
             {
@@ -40,6 +44,7 @@ namespace ChangeManagementSystem.Models
                 CompletedDate = null,
                 ModifiedBy = "admin@changemanagement.com",
                 Modified = DateTime.Parse("2018-01-14"),
+                SharedVersion = cr1.SharedVersion
 
             };
 
@@ -55,6 +60,11 @@ namespace ChangeManagementSystem.Models
                 Status =ChangeRequest.StatusEnum.inProgress,
                 Urgency =ChangeRequest.UrgencyEnum.medium
             };
+            cr2.SharedVersion = new Version
+            {
+                Modified = DateTime.Now,
+                ModifiedBy = "admin@changemanagement.com"
+            };
 
             var crt2 = new ChangeRequestTask
             {
@@ -65,6 +75,7 @@ namespace ChangeManagementSystem.Models
                 CompletedDate = null,
                 ModifiedBy = "admin@changemanagement.com",
                 Modified = DateTime.Parse("2018-01-05"),
+                SharedVersion = cr2.SharedVersion
             };
             var crt3 = new ChangeRequestTask
             {
@@ -75,6 +86,7 @@ namespace ChangeManagementSystem.Models
                 CompletedDate = null,
                 ModifiedBy = "admin@changemanagement.com",
                 Modified = DateTime.Parse("2018-01-05"),
+                SharedVersion = cr2.SharedVersion
             };
             var crt4 = new ChangeRequestTask
             {
@@ -85,6 +97,7 @@ namespace ChangeManagementSystem.Models
                 CompletedDate = null,
                 ModifiedBy = "admin@changemanagement.com",
                 Modified = DateTime.Parse("2018-01-05"),
+                SharedVersion = cr2.SharedVersion
             };
 
             context.ChangeRequests.Add(cr1);

@@ -129,10 +129,27 @@ namespace ChangeManagementSystem.Models
         {
             return DbContext.ChangeRequests.Where(cr => cr.ID == CRId)
                 .AsNoTracking()
+                .Include(cr => cr.SharedVersion)
                 .Include(cr => cr.ChangeRequestTasks)
+                .ThenInclude(crt => crt.SharedVersion)
                 .SingleOrDefault();
         }
 
+        public ChangeRequest GetChangeRequestByVersionId(int id)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<AppDataContext>();
+            optionsBuilder.UseSqlServer(Startup.ConnectionString);
+            using (var newContext = new AppDataContext(optionsBuilder.Options))
+            {
+                var changeRequest = newContext.ChangeRequests
+                    .AsNoTracking()
+                    .Include("SharedVersion")
+                    .Include("ChangeRequestTasks")
+                    .Where(c => c.SharedVersionId == id).FirstOrDefault();
+
+                return changeRequest;
+            }
+        }
         #endregion
 
         #region Create ChangeRequests
@@ -143,11 +160,14 @@ namespace ChangeManagementSystem.Models
         /// <returns></returns>
         public ChangeRequest CreateNewChangeRequest()
         {
-
             ChangeRequest cr = new ChangeRequest();
             cr.TargetDate = DateTime.Now.AddDays(7);
             cr.ActualDate = (DateTime?)null;
             cr.Status = ChangeRequest.StatusEnum.draft;
+
+            var version = new Version();
+            cr.SharedVersion = version;
+            cr.SharedVersionId = version.ID;
 
             cr.State = TrackedEntityState.Unchanged;
 
@@ -165,6 +185,7 @@ namespace ChangeManagementSystem.Models
             cr.Owner = CurrentUser;
             cr.ModifiedBy = CurrentUser;
             cr.Modified = DateTime.Now;
+            cr.SharedVersion.State = TrackedEntityState.Added;
 
             //DbContext.ChangeRequests.Add(cr);
             DbContext.ChangeTracker.TrackGraph(cr, e => UpdateStateOfItems(e));
@@ -187,6 +208,7 @@ namespace ChangeManagementSystem.Models
             oldCr.Status = newCr.Status;
             oldCr.ActualDate = newCr.ActualDate;
 
+            oldCr.SharedVersion.RowVersion = newCr.SharedVersion.RowVersion;
             oldCr.State = TrackedEntityState.Modified;
 
             oldCr.ModifiedBy = CurrentUser;
@@ -239,6 +261,17 @@ namespace ChangeManagementSystem.Models
                     node.Entry.State = EntityState.Added;
                     ((EntityBase) node.Entry.Entity).ID = 0;
                 }
+            }
+
+            if (node.Entry.Entity.GetType() == typeof(Version))
+            {
+                if (node.Entry.State != EntityState.Added)
+                {
+                    node.Entry.State = EntityState.Modified;
+                }
+
+                node.Entry.CurrentValues["Modified"] = DateTime.Now;
+                node.Entry.CurrentValues["ModifiedBy"] = CurrentUser;
             }
         }
 
@@ -298,6 +331,9 @@ namespace ChangeManagementSystem.Models
             {
                 changeRequest.ChangeRequestTasks = new List<ChangeRequestTask>();
             }
+
+            task.SharedVersionId = changeRequest.SharedVersion.ID;
+            task.SharedVersion = changeRequest.SharedVersion;
 
             changeRequest.ChangeRequestTasks.Add(task);
 
@@ -392,6 +428,10 @@ namespace ChangeManagementSystem.Models
 
     }
 }
+
+
+
+
 
 
 

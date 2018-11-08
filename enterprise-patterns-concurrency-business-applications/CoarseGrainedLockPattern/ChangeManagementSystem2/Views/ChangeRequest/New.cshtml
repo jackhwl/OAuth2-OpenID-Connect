@@ -5,6 +5,9 @@
         <h4>Create New Change Request</h4>
 
         <div asp-validation-summary="All" class="text-danger"></div>
+        <input asp-for="SharedVersionId" type="hidden" />
+        <input asp-for="SharedVersion.ID" type="hidden" />
+        <input asp-for="SharedVersion.RowVersion" type="hidden" />
 
         <div class="form-group">
             <label asp-for="Name" class="col-md-2 control-label"></label>

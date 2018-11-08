@@ -17,6 +17,7 @@ namespace ChangeManagementSystem.Models
         IEnumerable<ChangeRequest> SearchChangeRequests(ChangeRequestSearchCriteria criteria);
 
         ChangeRequest GetChangeRequestbyId(int crId);
+        ChangeRequest GetChangeRequestByVersionId(int id);
 
         bool DeleteChangeRequest(int id);
 

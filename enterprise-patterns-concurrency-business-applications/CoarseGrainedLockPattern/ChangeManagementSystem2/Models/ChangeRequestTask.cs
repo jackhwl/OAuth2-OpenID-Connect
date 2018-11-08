@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChangeManagementSystem.Models
 {
-    public class ChangeRequestTask : EntityBase
+    public class ChangeRequestTask : EntityBase, ISharedLockable
     {
         public enum StatusEnum
         {
@@ -27,5 +27,7 @@ namespace ChangeManagementSystem.Models
         public int ChangeRequestID { get; set; }
         public ChangeRequest ChangeRequest { get; set; }
 
+        public int SharedVersionId { get; set; }
+        public Version SharedVersion { get; set; }
     }
 }

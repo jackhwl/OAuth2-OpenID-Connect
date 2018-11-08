@@ -126,6 +126,113 @@ namespace ChangeManagementSystem.Controllers
                 _changeRequestRepository.EndBusinessTransaction();
                 return RedirectToAction("Index", "Home");
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry exceptionEntry in ex.Entries)
+                {
+                    if (exceptionEntry.Entity.GetType() == typeof(Models.Version))
+                    {
+                        var clientValues = (Models.Version) exceptionEntry.Entity;
+                        var dbEntry = exceptionEntry.GetDatabaseValues();
+                        if (dbEntry == null)
+                        {
+                            ModelState.AddModelError(string.Empty,
+                                "Unable to save changes.  Change Request was deleted by another user.");
+                        }
+                        else
+                        {
+                            var dbValues = (Models.Version) dbEntry.ToObject();
+                            var associatedChangeRequest =
+                                _changeRequestRepository.GetChangeRequestByVersionId(clientValues.ID);
+
+                            if (associatedChangeRequest.Name != ModelState["ChangeRequest.Name"].AttemptedValue)
+                            {
+                                ModelState.AddModelError("ChangeRequest.Name",
+                                    $"Current Value: {associatedChangeRequest.Name}");
+                            }
+
+                            if (associatedChangeRequest.Summary != ModelState["ChangeRequest.Summary"].AttemptedValue)
+                            {
+                                ModelState.AddModelError("ChangeRequest.Summary",
+                                    $"Current Value: {associatedChangeRequest.Summary}");
+                            }
+
+                            if (associatedChangeRequest.Status !=
+                                (ChangeRequest.StatusEnum) int.Parse(ModelState["ChangeRequest.Status"].AttemptedValue))
+                            {
+                                ModelState.AddModelError("ChangeRequest.Status",
+                                    $"Current Value: {associatedChangeRequest.Status}");
+                            }
+
+                            if (associatedChangeRequest.Priority !=
+                                (ChangeRequest.PriorityEnum) int.Parse(ModelState["ChangeRequest.Priority"]
+                                    .AttemptedValue))
+                            {
+                                ModelState.AddModelError("ChangeRequest.Priority",
+                                    $"Current Value: {associatedChangeRequest.Priority}");
+                            }
+
+                            if (associatedChangeRequest.Urgency !=
+                                (ChangeRequest.UrgencyEnum) int.Parse(
+                                    ModelState["ChangeRequest.Urgency"].AttemptedValue))
+                            {
+                                ModelState.AddModelError("ChangeRequest.Urgency",
+                                    $"Current Value: {associatedChangeRequest.Urgency}");
+                            }
+
+                            if (associatedChangeRequest.TargetDate !=
+                                DateTime.Parse(ModelState["ChangeRequest.TargetDate"].AttemptedValue))
+                            {
+                                ModelState.AddModelError("ChangeRequest.TargetDate",
+                                    $"Current Value: {associatedChangeRequest.TargetDate}");
+                            }
+
+                            DateTime dt;
+                            if (DateTime.TryParse(ModelState["ChangeRequest.ActualDate"].AttemptedValue, out dt))
+                            {
+                                if (associatedChangeRequest.ActualDate !=
+                                    DateTime.Parse(ModelState["ChangeRequest.ActualDate"].AttemptedValue))
+                                {
+                                    ModelState.AddModelError("ChangeRequest.ActualDate",
+                                        $"Current Value: {associatedChangeRequest.ActualDate}");
+                                }
+                            }
+
+                            if (associatedChangeRequest.Owner != ModelState["ChangeRequest.Owner"].AttemptedValue)
+                            {
+                                ModelState.AddModelError("ChangeRequest.Owner",
+                                    $"Current Value: {associatedChangeRequest.Owner}");
+                            }
+
+                            if (associatedChangeRequest.Modified !=
+                                DateTime.Parse(ModelState["ChangeRequest.Modified"].AttemptedValue))
+                            {
+                                ModelState.AddModelError("ChangeRequest.Modified",
+                                    $"Current Value: {associatedChangeRequest.Modified}");
+                            }
+
+                            if (associatedChangeRequest.ModifiedBy !=
+                                ModelState["ChangeRequest.ModifiedBy"].AttemptedValue)
+                            {
+                                ModelState.AddModelError("ChangeRequest.ModifiedBy",
+                                    $"Current Value: {associatedChangeRequest.ModifiedBy}");
+                            }
+
+                            ModelState.AddModelError(string.Empty, "The record you attempted to edit "
+                                                                   + "was modified by " +
+                                                                   associatedChangeRequest.ModifiedBy +
+                                                                   " after you got the original value.  "
+                                                                   + "Saving will overwrite other user's changes.");
+
+                            model.ChangeRequest.SharedVersion.RowVersion =
+                                associatedChangeRequest.SharedVersion.RowVersion;
+
+                            ModelState.Remove("ChangeRequest.SharedVersion.RowVersion");
+
+                        }
+                    }
+                }
+            }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", "An error occurred saving the record.");
