@@ -149,6 +149,8 @@ namespace ChangeManagementSystem.Models
             cr.ActualDate = (DateTime?)null;
             cr.Status = ChangeRequest.StatusEnum.draft;
 
+            cr.State = TrackedEntityState.Unchanged;
+
             return cr;
         }
 
@@ -158,11 +160,14 @@ namespace ChangeManagementSystem.Models
         /// <param name="cr"></param>
         public void CreateChangeRequest(ChangeRequest cr)
         {
+            cr.State = TrackedEntityState.Added;
+
             cr.Owner = CurrentUser;
             cr.ModifiedBy = CurrentUser;
             cr.Modified = DateTime.Now;
 
-            DbContext.ChangeRequests.Add(cr);
+            //DbContext.ChangeRequests.Add(cr);
+            DbContext.ChangeTracker.TrackGraph(cr, e => UpdateStateOfItems(e));
             DbContext.SaveChanges();
 
         }
@@ -182,6 +187,8 @@ namespace ChangeManagementSystem.Models
             oldCr.Status = newCr.Status;
             oldCr.ActualDate = newCr.ActualDate;
 
+            oldCr.State = TrackedEntityState.Modified;
+
             oldCr.ModifiedBy = CurrentUser;
             oldCr.Modified = DateTime.Now;
         }
@@ -195,8 +202,44 @@ namespace ChangeManagementSystem.Models
             var changeRequestToSave = ContinueBusinessTransaction(changeRequest.ID);
             UpdateChangeRequestProperties(changeRequest, changeRequestToSave);
 
-            DbContext.ChangeRequests.Update(changeRequestToSave);
+            //DbContext.ChangeRequests.Update(changeRequestToSave);
+            DbContext.ChangeTracker.TrackGraph(changeRequestToSave, e => UpdateStateOfItems(e));
             DbContext.SaveChanges();
+        }
+
+        private void UpdateStateOfItems(EntityEntryGraphNode node)
+        {
+            if (node.Entry.Entity.GetType().BaseType == typeof(EntityBase))
+            {
+                if (((EntityBase) node.Entry.Entity).State == TrackedEntityState.Added)
+                {
+                    node.Entry.State = EntityState.Added;
+                } else if (((EntityBase) node.Entry.Entity).State == TrackedEntityState.Modified)
+                {
+                    node.Entry.State = EntityState.Modified;
+                } else if (((EntityBase) node.Entry.Entity).State == TrackedEntityState.Deleted)
+                {
+                    if (((EntityBase) node.Entry.Entity).ID == 0)
+                    {
+                        node.Entry.State = EntityState.Unchanged;
+                    }
+                    else
+                    {
+                        node.Entry.State = EntityState.Deleted;
+                    }
+                }
+            }
+            else
+            {
+                if (node.Entry.IsKeySet)
+                {
+                    node.Entry.State = EntityState.Modified;
+                } else if (node.Entry.State != EntityState.Deleted)
+                {
+                    node.Entry.State = EntityState.Added;
+                    ((EntityBase) node.Entry.Entity).ID = 0;
+                }
+            }
         }
 
         #endregion
@@ -206,7 +249,9 @@ namespace ChangeManagementSystem.Models
         public bool DeleteChangeRequest(int id)
         {
             ChangeRequest changeRequestToDelete = GetChangeRequestbyId(id);
-            DbContext.Remove(changeRequestToDelete);
+            changeRequestToDelete.State = TrackedEntityState.Deleted;
+            //DbContext.Remove(changeRequestToDelete);
+            DbContext.ChangeTracker.TrackGraph(changeRequestToDelete, e => UpdateStateOfItems(e));
             DbContext.SaveChanges();
 
             return true;
@@ -244,6 +289,10 @@ namespace ChangeManagementSystem.Models
 
         public int CreateChangeRequestTask(ChangeRequestTask task)
         {
+            task.ModifiedBy = CurrentUser;
+            task.Modified = DateTime.Now;
+
+            task.State = TrackedEntityState.Added;
             var changeRequest = ContinueBusinessTransaction(task.ChangeRequestID);
             if (changeRequest.ChangeRequestTasks == null)
             {
@@ -297,6 +346,8 @@ namespace ChangeManagementSystem.Models
                 retrievedTask = changeRequest.ChangeRequestTasks.Find(t=>t.ID == task.ID);
             }
 
+            retrievedTask.State = TrackedEntityState.Modified;
+
             retrievedTask.CompletedDate = task.CompletedDate;
             retrievedTask.Name = task.Name;
             retrievedTask.Status = task.Status;
@@ -325,6 +376,8 @@ namespace ChangeManagementSystem.Models
                 retrievedTask = changeRequest.ChangeRequestTasks.Find(t=>t.ID == task.ID);
             }
 
+            retrievedTask.State = TrackedEntityState.Deleted;
+
             retrievedTask.Modified = DateTime.Now;
             retrievedTask.ModifiedBy = CurrentUser;
 
@@ -339,3 +392,6 @@ namespace ChangeManagementSystem.Models
 
     }
 }
+
+
+

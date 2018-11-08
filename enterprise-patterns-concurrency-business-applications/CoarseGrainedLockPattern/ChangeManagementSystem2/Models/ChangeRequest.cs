@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChangeManagementSystem.Models
 {
-    public class ChangeRequest
+    public class ChangeRequest : EntityBase
     {
         public enum UrgencyEnum
         {
@@ -29,11 +29,6 @@ namespace ChangeManagementSystem.Models
             [Display(Name = "In Progress")] inProgress,
             [Display(Name = "Completed")] completed
         }
-
-        public int ID { get; set; }
-
-        public string ModifiedBy { get; set; }
-        public DateTime Modified { get; set; }
 
         [Display(Name = "Title")]
         [StringLength(100)]
