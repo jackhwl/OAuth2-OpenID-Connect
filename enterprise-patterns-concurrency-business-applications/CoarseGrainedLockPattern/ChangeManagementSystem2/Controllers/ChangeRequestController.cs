@@ -98,8 +98,13 @@ namespace ChangeManagementSystem.Controllers
 
         // GET: /<controller>/
         public IActionResult Edit(int id)
-        {   
-            var changeRequest = _changeRequestRepository.GetChangeRequestbyId(id);
+        {
+            var changeRequest = _changeRequestRepository.ContinueBusinessTransaction(id);
+            if (changeRequest == null)
+            {
+                changeRequest = _changeRequestRepository.GetChangeRequestbyId(id);
+                _changeRequestRepository.StartBusinessTransaction(changeRequest);
+            }
 
             ChangeRequestViewModel vm = new ChangeRequestViewModel
             {
@@ -118,6 +123,7 @@ namespace ChangeManagementSystem.Controllers
             try
             {
                 _changeRequestRepository.UpdateChangeRequest(model.ChangeRequest);
+                _changeRequestRepository.EndBusinessTransaction();
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
@@ -128,21 +134,52 @@ namespace ChangeManagementSystem.Controllers
         }
 
         [HttpPost]
+        public IActionResult NewChangeRequestTask(ChangeRequestViewModel model)
+        {
+            _changeRequestRepository.ContinueBusinessTransaction(model.ChangeRequest);
+            return RedirectToAction("New", "ChangeRequestTask", new { changeRequestId = model.ChangeRequest.ID });
+        }
+
+        [HttpPost]
+        public IActionResult ViewChangeRequestTask(ChangeRequestViewModel model)
+        {
+            _changeRequestRepository.ContinueBusinessTransaction(model.ChangeRequest);
+            return RedirectToAction("View", "ChangeRequestTask", new { id = model.TaskId, changeRequestId = model.ChangeRequest.ID, modified = model.TaskModifiedTime, returnView = "Edit" });
+        }
+
+
+        [HttpPost]
+        public IActionResult EditChangeRequestTask(ChangeRequestViewModel model)
+        {
+            _changeRequestRepository.ContinueBusinessTransaction(model.ChangeRequest);
+            return RedirectToAction("Edit", "ChangeRequestTask", new { id = model.TaskId, changeRequestId = model.ChangeRequest.ID, modified = model.TaskModifiedTime });
+        }
+
+        [HttpPost]
+        public IActionResult DeleteChangeRequestTask(ChangeRequestViewModel model)
+        {
+            _changeRequestRepository.ContinueBusinessTransaction(model.ChangeRequest);
+            return RedirectToAction("Delete", "ChangeRequestTask", new { id = model.TaskId, changeRequestId = model.ChangeRequest.ID, modified = model.TaskModifiedTime });
+        }
+
+        [HttpPost]
         public IActionResult NavigateToEditSummary(ChangeRequestViewModel model)
         {
+            _changeRequestRepository.ContinueBusinessTransaction(model.ChangeRequest);
             return RedirectToAction("EditSummary", "ChangeRequest", new { id = model.ChangeRequest.ID });
         }
 
         [HttpPost]
         public IActionResult Cancel()
         {
+            _changeRequestRepository.EndBusinessTransaction();
             return RedirectToAction("Index", "Home");
         }
 
         // GET: /<controller>/
         public IActionResult EditSummary(int id)
         {
-            var changeRequest = _changeRequestRepository.GetChangeRequestbyId(id);
+            var changeRequest = _changeRequestRepository.ContinueBusinessTransaction(id);
 
             if (changeRequest == null)
             {
@@ -158,7 +195,9 @@ namespace ChangeManagementSystem.Controllers
         {
             if(Save != null)
             {
-                _changeRequestRepository.UpdateChangeRequest(model);
+                var changeRequest = _changeRequestRepository.ContinueBusinessTransaction(model.ID);
+                changeRequest.Summary = model.Summary;
+                _changeRequestRepository.ContinueBusinessTransaction(changeRequest);
             }
             return RedirectToAction("Edit", new { id = model.ID });
         }

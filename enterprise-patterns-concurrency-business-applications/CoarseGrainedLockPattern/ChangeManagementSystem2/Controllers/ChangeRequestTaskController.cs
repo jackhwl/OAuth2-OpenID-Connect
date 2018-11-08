@@ -31,9 +31,9 @@ namespace ChangeManagementSystem.Controllers
 
         #region Get ChangeRequestTask
 
-        public IActionResult View(int id, int changeRequestId, string returnView)
+        public IActionResult View(int id, int changeRequestId, string modified, string returnView)
         {
-            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id);
+            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id, modified);
 
             var vm = new ChangeRequestTaskViewModel();
             vm.Task = task;
@@ -79,9 +79,9 @@ namespace ChangeManagementSystem.Controllers
         #region Edit ChangeRequestTask
 
         // GET: /<controller>/
-        public IActionResult Edit(int id, int changeRequestId)
+        public IActionResult Edit(int id, int changeRequestId, string modified)
         {
-            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id);
+            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id, modified);
             return View(task);
         }
 
@@ -103,9 +103,9 @@ namespace ChangeManagementSystem.Controllers
 
         #endregion
 
-        public IActionResult Delete(int id, int changeRequestId)
+        public IActionResult Delete(int id, int changeRequestId, string modified)
         {
-            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id);
+            var task = _changeRequestRepository.GetChangeRequestTaskbyId(id, modified);
             return View(task);   
         }
 

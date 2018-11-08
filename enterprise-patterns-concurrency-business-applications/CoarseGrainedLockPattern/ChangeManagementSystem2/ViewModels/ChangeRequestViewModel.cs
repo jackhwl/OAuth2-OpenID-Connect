@@ -9,5 +9,7 @@ namespace ChangeManagementSystem.ViewModels
     public class ChangeRequestViewModel
     {
         public ChangeRequest ChangeRequest { get; set; }
+        public int TaskId { get; set; }
+        public DateTime TaskModifiedTime { get; set; }
     }
 }
