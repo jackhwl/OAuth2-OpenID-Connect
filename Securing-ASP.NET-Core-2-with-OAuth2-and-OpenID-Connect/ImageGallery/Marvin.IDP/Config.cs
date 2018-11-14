@@ -69,7 +69,9 @@ namespace Marvin.IDP
                     },
                     AllowedScopes =
                     {
-                        IdentityServerConstants.StandardScopes.OpenId
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+
                     },
                     ClientSecrets =
                     {
