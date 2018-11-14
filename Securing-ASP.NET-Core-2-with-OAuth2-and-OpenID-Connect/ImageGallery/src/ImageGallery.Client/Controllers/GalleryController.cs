@@ -183,5 +183,11 @@ namespace ImageGallery.Client.Controllers
                 Debug.WriteLine($"Claim type: {claim.Type} - Claim value: {claim.Value}");
             }
         }
+
+        public async Task Logout()
+        {
+            // Clears the local cookie ("Cookies" must match name from scheme)
+            await HttpContext.SignOutAsync("Cookies");
+        }
     }
 }
