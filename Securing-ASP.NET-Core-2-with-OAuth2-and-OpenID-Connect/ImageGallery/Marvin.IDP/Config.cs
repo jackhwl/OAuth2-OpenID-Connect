@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
+using Microsoft.AspNetCore.Mvc.Internal;
 
 namespace Marvin.IDP
 {
@@ -39,6 +41,21 @@ namespace Marvin.IDP
                     }
                 }
             };
+        }
+
+        // identity-related resources (scopes)
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile()
+            };
+        }
+
+        public static IEnumerable<Client> GetClients()
+        {
+            return new List<Client>();
         }
     }
 }
