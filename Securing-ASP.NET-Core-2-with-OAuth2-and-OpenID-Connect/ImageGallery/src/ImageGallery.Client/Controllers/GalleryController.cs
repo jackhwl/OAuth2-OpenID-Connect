@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -167,6 +168,24 @@ namespace ImageGallery.Client.Controllers
             }
 
             throw new Exception($"A problem happened while calling the API: {response.ReasonPhrase}");
+        }
+
+        public async Task<IActionResult> OrderFrame()
+        {
+            var discoveryClient = new DiscoveryClient("https://localhost:44379/");
+            var metaDataResponse = await discoveryClient.GetAsync();
+            var userInfoClient = new UserInfoClient(metaDataResponse.UserInfoEndpoint);
+
+            var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+            var response = await userInfoClient.GetAsync(accessToken);
+            if (response.IsError)
+            {
+                throw new Exception("Problem accessing the UserInfo endpoint.", response.Exception);
+            }
+
+            var address = response.Claims.FirstOrDefault(c => c.Type == "address")?.Value;
+
+            return View(new OrderFrameViewModel(address));
         }
 
         public async Task WriteOutIdentityInformation()
