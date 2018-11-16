@@ -39,7 +39,8 @@ namespace ImageGallery.Client
                 {
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
-                }).AddCookie("Cookies")
+                })
+                .AddCookie("Cookies", options => { options.AccessDeniedPath = "/Authorization/AccessDenied"; })
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.SignInScheme = "Cookies";
