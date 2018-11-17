@@ -29,6 +29,8 @@ namespace Marvin.IDP
                         new Claim("family_name", "Underwood"),
                         new Claim("address", "Main Road 1"),
                         new Claim("role", "FreeUser"),
+                        new Claim("country", "nl"),
+                        new Claim("subscriptionlevel", "FreeUser"),
                     }
                 },
                 new TestUser
@@ -43,6 +45,9 @@ namespace Marvin.IDP
                         new Claim("family_name", "Underwood"),
                         new Claim("address", "Big Street 2"),
                         new Claim("role", "PayingUser"),
+                        new Claim("country", "be"),
+                        new Claim("subscriptionlevel", "PayingUser"),
+                        
                     }
                 }
             };
@@ -56,8 +61,9 @@ namespace Marvin.IDP
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
-                new IdentityResource(
-                    "roles", "Your role(s)", new List<string>() {"role"})
+                new IdentityResource("roles", "Your role(s)", new List<string>() { "role" }),
+                new IdentityResource("country", "The country you're living in", new List<string>{ "country" }),
+                new IdentityResource("subscriptionlevel", "Your subscription level", new List<string>{ "subscriptionlevel" })
             };
         }
 
@@ -93,8 +99,9 @@ namespace Marvin.IDP
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         "roles",
-                        "imagegalleryapi"
-
+                        "imagegalleryapi",
+                        "country",
+                        "subscriptionlevel"
                     },
                     ClientSecrets =
                     {
