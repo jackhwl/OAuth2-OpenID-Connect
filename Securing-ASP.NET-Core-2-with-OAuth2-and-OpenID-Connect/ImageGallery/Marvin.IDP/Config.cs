@@ -88,6 +88,10 @@ namespace Marvin.IDP
                     // IdentityTokenLifetime = 5min
                     // AuthorizationCodeLifetime = 5min
                     AccessTokenLifetime = 120,
+                    AllowOfflineAccess = true,
+                    //AbsoluteRefreshTokenLifetime = 30 days
+                    //RefreshTokenExpiration = TokenExpiration.Absolute;
+                    UpdateAccessTokenClaimsOnRefresh = true,
                     RedirectUris = new List<string>()
                     {
                         "https://localhost:44387/signin-oidc"
