@@ -76,11 +76,6 @@ namespace ImageGallery.Client.Services
             // get the saved refresh token
             var currentRefreshToken = await currentContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
 
-            if (currentRefreshToken == null)
-            {
-                return await currentContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
-            }
-
             // refresh the tokens
             var tokenResult = await tokenClient.RequestRefreshTokenAsync(currentRefreshToken);
 
