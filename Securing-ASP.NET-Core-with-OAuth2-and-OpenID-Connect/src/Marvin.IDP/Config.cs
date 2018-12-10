@@ -73,7 +73,7 @@ namespace Marvin.IDP
                     {
                         new Secret("secret".Sha256())
                     },
-                    AlwaysIncludeUserClaimsInIdToken = true
+                    //AlwaysIncludeUserClaimsInIdToken = true
                 }
             };
         }

@@ -28,7 +28,7 @@ namespace ImageGallery.Client.Controllers
 
         public async Task<IActionResult> Index()
         {
-            await WriteOutIdentityInformation();
+            //await WriteOutIdentityInformation();
 
             // call the API
             var httpClient = await _imageGalleryHttpClient.GetClient(); 
