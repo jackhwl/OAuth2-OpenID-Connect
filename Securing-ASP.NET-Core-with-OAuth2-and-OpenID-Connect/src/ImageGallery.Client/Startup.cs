@@ -50,6 +50,7 @@ namespace ImageGallery.Client
                     options.Scope.Add("profile");
                     options.ResponseType = "code id_token";
                     //options.CallbackPath = new PathString("");
+                    //options.SignedOutCallbackPath = new PathString("");
                     options.SignInScheme = "Cookies";
                     options.SaveTokens = true;
                     options.ClientSecret = "secret";
