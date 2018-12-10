@@ -34,6 +34,26 @@ namespace ImageGallery.Client
 
             // register an IImageGalleryHttpClient
             services.AddScoped<IImageGalleryHttpClient, ImageGalleryHttpClient>();
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Cookies";
+                    options.DefaultChallengeScheme = "oidc";
+                })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "https://localhost:44380/";  //Marvin.IDP TLS url
+                    options.RequireHttpsMetadata = true;
+                    options.ClientId = "imagegalleryclient";
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.ResponseType = "code id_token";
+                    //options.CallbackPath = new PathString("");
+                    options.SignInScheme = "Cookies";
+                    options.SaveTokens = true;
+                    options.ClientSecret = "secret";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +71,9 @@ namespace ImageGallery.Client
             {
                 app.UseExceptionHandler("/Shared/Error");
             }
-            
+
+            app.UseAuthentication();
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
