@@ -10,6 +10,10 @@ Configure(): UseXyzAuthentication has been replaced by ConfigureService(): AddXy
 https://github.com/aspnet/Security/issues/1310
 ClientSecret is required in Hybird mode 
 
+By default, identity server will not include the claims in the identity token.
+there're two ways to include claims 
+1. AlwaysIncludeUserClaimsInIdToken = true (IDP Config.cs)
+
 multiple project:
 ImageGallery.API		start
 ImageGallery.Client		start
