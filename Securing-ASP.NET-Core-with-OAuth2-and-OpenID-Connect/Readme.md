@@ -3,22 +3,24 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercon
 
 Response Type Values: 
 
-code					id_toke	/ id_token token		code id_token / code token / code id_token token
-Authorization Code		Implicit						Hybird
+| code | id_token / id_token token | code id_token / code token / code id_token token |
+| -- | -- | -- |
+| Authorization Code | Implicit | Hybird |
 
+|Client application ||IDP|
+| -- | -- | -- |
+||authentication request --->|authorization endpoint|
+|||user authenticates|
+|||user gives consent|
+||<----	code id_token (authrozation code, identity token) |
+|token (identity token) is validated|
+||token request (code, clientid, clientsecret) --->| 	token endpoint
+||<----	id_token, access_token
+token (identity token) is validated|
+||userinfo request (access_token) ---> | userinfo endpoint
+|||access token is validated
+||<----	user claims
 
-Client application 							IDP
-	authentication request --->							authorization endpoint
-															user authenticates
-															user gives consent
-						<----	code id_token (authrozation code, identity token)
-token (identity token) is validated
-	token request (code, clientid, clientsecret) --->  	token endpoint
-						<----	id_token, access_token
-token (identity token) is validated
-	userinfo request (access_token) --->				userinfo endpoint
-															access token is validated
-						<----	user claims
 
 the main reason to get user claims this way is to keep identity token small.	
 	
