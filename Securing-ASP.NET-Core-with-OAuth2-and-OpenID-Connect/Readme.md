@@ -59,3 +59,16 @@ ImageGallery.API		start
 ImageGallery.Client		start
 ImageGallery.Model		none
 Marvin.IDP				none
+
+https://github.com/aspnet/Security/blob/dde7671c06da64e4a7a290c37ed86e9a9bdd0dd7/src/Microsoft.AspNetCore.Authentication.OpenIdConnect/OpenIdConnectOptions.cs#L63-L69
+// http://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+            ClaimActions.MapUniqueJsonKey("sub", "sub");
+            ClaimActions.MapUniqueJsonKey("name", "name");
+            ClaimActions.MapUniqueJsonKey("given_name", "given_name");
+            ClaimActions.MapUniqueJsonKey("family_name", "family_name");
+            ClaimActions.MapUniqueJsonKey("profile", "profile");
+            ClaimActions.MapUniqueJsonKey("email", "email");
+
+Claims not on above list will not be include in id-token by default.
+
+call discoveryClient to get metaDataResponse, then use userinfoEndpoint from metaDataResponse
