@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,17 +11,13 @@ namespace ImageGallery.Client
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
-        public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -34,7 +31,6 @@ namespace ImageGallery.Client
 
             // register an IImageGalleryHttpClient
             services.AddScoped<IImageGalleryHttpClient, ImageGalleryHttpClient>();
-
             services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = "Cookies";
