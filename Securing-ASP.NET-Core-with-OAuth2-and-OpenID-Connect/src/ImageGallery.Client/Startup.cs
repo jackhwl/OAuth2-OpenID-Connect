@@ -45,6 +45,7 @@ namespace ImageGallery.Client
                     options.ClientId = "imagegalleryclient";
                     options.Scope.Add("openid");
                     options.Scope.Add("profile");
+                    options.Scope.Add("address");
                     options.ResponseType = "code id_token";
                     //options.CallbackPath = new PathString("");
                     //options.SignedOutCallbackPath = new PathString("");
