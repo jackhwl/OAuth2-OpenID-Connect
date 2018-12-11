@@ -108,3 +108,8 @@ RBAC (Role-based access control) vs ABAC (Attribute-based access control)
 need add role specifically in startup class
 options.ClaimActions.MapUniqueJsonKey("role", "role");
 
+need this in order to make User.IsInRole("PayingUser") to work
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        RoleClaimType = JwtClaimTypes.Role
+    };

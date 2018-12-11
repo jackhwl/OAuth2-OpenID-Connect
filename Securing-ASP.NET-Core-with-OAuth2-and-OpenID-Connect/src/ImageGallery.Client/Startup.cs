@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using IdentityModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using ImageGallery.Client.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ImageGallery.Client
 {
@@ -37,7 +39,7 @@ namespace ImageGallery.Client
                     options.DefaultScheme = "Cookies";
                     options.DefaultChallengeScheme = "oidc";
                 })
-                .AddCookie("Cookies")
+                .AddCookie("Cookies", options => { options.AccessDeniedPath = "/Authorization/AccessDenied"; })
                 .AddOpenIdConnect("oidc", options =>
                 {
                     options.Authority = "https://localhost:44380/";  //Marvin.IDP TLS url
@@ -58,6 +60,11 @@ namespace ImageGallery.Client
                     options.ClaimActions.DeleteClaim("sid");
                     options.ClaimActions.DeleteClaim("idp");
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        RoleClaimType = JwtClaimTypes.Role
+                    };
                 });
         }
 

@@ -31,6 +31,8 @@ namespace ImageGallery.Client.Controllers
         {
             await WriteOutIdentityInformation();
 
+            var p = User.IsInRole("PayingUser");
+            var f = User.IsInRole("FreeUser");
             // call the API
             var httpClient = await _imageGalleryHttpClient.GetClient(); 
 
