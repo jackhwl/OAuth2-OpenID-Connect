@@ -21,6 +21,36 @@ token (identity token) is validated|
 |||access token is validated
 ||<----	user claims
 
+https://openid.net/specs/openid-connect-core-1_0.html
+
+The OpenID Connect protocol, in abstract, follows the following steps.
+
+The RP (Client) sends a request to the OpenID Provider (OP).
+The OP authenticates the End-User and obtains authorization.
+The OP responds with an ID Token and usually an Access Token.
+The RP can send a request with the Access Token to the UserInfo Endpoint.
+The UserInfo Endpoint returns Claims about the End-User.
+These steps are illustrated in the following diagram:
+
++--------+                                   +--------+
+|        |                                   |        |
+|        |---------(1) AuthN Request-------->|        |
+|        |                                   |        |
+|        |  +--------+                       |        |
+|        |  |        |                       |        |
+|        |  |  End-  |<--(2) AuthN & AuthZ-->|        |
+|        |  |  User  |                       |        |
+|   RP   |  |        |                       |   OP   |
+|        |  +--------+                       |        |
+|        |                                   |        |
+|        |<--------(3) AuthN Response--------|        |
+|        |                                   |        |
+|        |---------(4) UserInfo Request----->|        |
+|        |                                   |        |
+|        |<--------(5) UserInfo Response-----|        |
+|        |                                   |        |
++--------+                                   +--------+
+
 
 the main reason to get user claims this way is to keep identity token small.	
 	
@@ -72,3 +102,9 @@ https://github.com/aspnet/Security/blob/dde7671c06da64e4a7a290c37ed86e9a9bdd0dd7
 Claims not on above list will not be include in id-token by default.
 
 call discoveryClient to get metaDataResponse, then use userinfoEndpoint from metaDataResponse
+
+RBAC (Role-based access control) vs ABAC (Attribute-based access control)
+
+need add role specifically in startup class
+options.ClaimActions.MapUniqueJsonKey("role", "role");
+
