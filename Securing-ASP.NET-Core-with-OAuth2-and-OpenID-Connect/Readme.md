@@ -1,7 +1,10 @@
 Adding the quickstart UI
 iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/IdentityServer/IdentityServer4.Quickstart.UI/master/getmaster.ps1'))
 
+two client type: public and confidential client
 Response Type Values: 
+
+the flow determines how the id_token and access_token are returned to the client.
 
 | code | id_token / id_token token | code id_token / code token / code id_token token |
 | -- | -- | -- |
@@ -113,3 +116,5 @@ need this in order to make User.IsInRole("PayingUser") to work
     {
         RoleClaimType = JwtClaimTypes.Role
     };
+
+OAuth2 is intended for delegated authoriztion, ie authorizing to resources, like an API.

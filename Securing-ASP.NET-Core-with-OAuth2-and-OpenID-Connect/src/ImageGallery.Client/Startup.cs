@@ -49,6 +49,7 @@ namespace ImageGallery.Client
                     options.Scope.Add("profile");
                     options.Scope.Add("address");
                     options.Scope.Add("roles");
+                    options.Scope.Add("imagegalleryapi");
                     options.ResponseType = "code id_token";
                     //options.CallbackPath = new PathString("");
                     //options.SignedOutCallbackPath = new PathString("");

@@ -13,6 +13,7 @@ using System.Linq;
 namespace ImageGallery.API.Controllers
 {
     [Route("api/images")]
+    [Authorize]
     public class ImagesController : Controller
     {
         private readonly IGalleryRepository _galleryRepository;
