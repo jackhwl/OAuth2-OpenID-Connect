@@ -43,6 +43,13 @@ namespace ImageGallery.API.Controllers
         [HttpGet("{id}", Name = "GetImage")]
         public IActionResult GetImage(Guid id)
         {
+            var ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+
+            if (!_galleryRepository.IsImageOwner(id, ownerId))
+            {
+                return StatusCode(403);
+            }
+
             var imageFromRepo = _galleryRepository.GetImage(id);
 
             if (imageFromRepo == null)
