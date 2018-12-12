@@ -6,7 +6,7 @@ namespace ImageGallery.API.Services
 {
     public interface IGalleryRepository
     {
-        IEnumerable<Image> GetImages();
+        IEnumerable<Image> GetImages(string ownerId);
         Image GetImage(Guid id);
         bool ImageExists(Guid id);
         void AddImage(Image image);
