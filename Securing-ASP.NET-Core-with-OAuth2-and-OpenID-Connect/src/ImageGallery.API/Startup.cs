@@ -29,7 +29,7 @@ namespace ImageGallery.API
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:44345/";
+                    options.Authority = "https://localhost:44380/";
                     options.ApiName = "imagegalleryapi";
                     //options.ApiSecret = "apisecret";
                 });
