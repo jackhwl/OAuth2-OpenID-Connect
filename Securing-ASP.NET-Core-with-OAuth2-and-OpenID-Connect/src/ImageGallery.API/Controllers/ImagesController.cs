@@ -137,6 +137,12 @@ namespace ImageGallery.API.Controllers
         public IActionResult UpdateImage(Guid id, 
             [FromBody] ImageForUpdate imageForUpdate)
         {           
+            var ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub").Value;
+            if (!_galleryRepository.IsImageOwner(id, ownerId))
+            {
+                return StatusCode(403);
+            }
+
             if (imageForUpdate == null)
             {
                 return BadRequest();
