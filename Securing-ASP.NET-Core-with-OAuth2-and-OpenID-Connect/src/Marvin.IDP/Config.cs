@@ -27,6 +27,8 @@ namespace Marvin.IDP
                         new Claim("family_name", "Underwood"),
                         new Claim("address", "1, Main Road"),
                         new Claim("role", "FreeUser"),
+                        new Claim("subscriptionlevel", "FreeUser"),
+                        new Claim("country", "nl"),
                     }
                 },
                 new TestUser
@@ -41,6 +43,8 @@ namespace Marvin.IDP
                         new Claim("family_name", "Underwood"),
                         new Claim("address", "2, Big Street"),
                         new Claim("role", "PayingUser"),
+                        new Claim("subscriptionlevel", "PayingUser"),
+                        new Claim("country", "be"),
                     }
                 }
             };
@@ -54,6 +58,8 @@ namespace Marvin.IDP
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
                 new IdentityResource("roles", "Your role(s)", new List<string>() { "role" }),
+                new IdentityResource("country", "The country you're living in", new List<string>() { "country" }),
+                new IdentityResource("subscriptionlevel", "Your subscription level", new List<string>() { "subscriptionlevel" }),
             };
         }
 
@@ -61,8 +67,7 @@ namespace Marvin.IDP
         {
             return new List<ApiResource>
             {
-                new ApiResource("imagegalleryapi", "Image Gallery API",
-                new List<string>{"role"})
+                new ApiResource("imagegalleryapi", "Image Gallery API", new List<string>{"role"})
             };
         }
 
@@ -89,7 +94,9 @@ namespace Marvin.IDP
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Address,
                         "roles",
-                        "imagegalleryapi"
+                        "imagegalleryapi",
+                        "country",
+                        "subscriptionlevel"
                     },
                     ClientSecrets =
                     {

@@ -118,3 +118,27 @@ need this in order to make User.IsInRole("PayingUser") to work
     };
 
 OAuth2 is intended for delegated authoriztion, ie authorizing to resources, like an API.
+
+Including Identity Claims in an Access Token
+
+Role-baed Access Control (RBAC) | Attribute-based Access Control (ABAC)
+--|--
+access rights granted through predefined roles | access rights granted through policies
+Each role carries a set of privilegs | A plicy conbines a set of attributes (claims) together
+| Allows much more complex rules that RBAC
+
+add new claims to the userinfo endpoint:
+in IDP Config.cs                 
+	1. add new IdentityResource("subscriptionlevel", "Your subscription level", new List<string>() { "subscriptionlevel" }),
+	2. add that claim to AllowedScopes of GetClients list.
+	3. include that claim to the claim list of each Test User
+in Client 
+	1. Add Policy in ConfigurationServices.
+	            services.AddAuthorization(authorizationOptions => { authorizationOptions.AddPolicy("CanOrderFrame",
+                policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.RequireClaim("country", "be");
+                    policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
+                });
+
