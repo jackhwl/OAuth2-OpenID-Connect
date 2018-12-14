@@ -28,13 +28,16 @@ namespace ImageGallery.Client
             // Add framework services.
             services.AddMvc();
 
-            services.AddAuthorization(authorizationOptions => { authorizationOptions.AddPolicy("CanOrderFrame",
-                policyBuilder =>
-                {
-                    policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.RequireClaim("country", "be");
-                    policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
-                });
+            services.AddAuthorization(authorizationOptions =>
+            {
+                authorizationOptions.AddPolicy("CanOrderFrame",
+                    policyBuilder =>
+                    {
+                        policyBuilder.RequireAuthenticatedUser();
+                        policyBuilder.RequireClaim("country", "be");
+                        policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
+                    });
+            });
             // register an IHttpContextAccessor so we can access the current
             // HttpContext in services by injecting it
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -70,6 +73,8 @@ namespace ImageGallery.Client
                     options.ClaimActions.DeleteClaim("sid");
                     options.ClaimActions.DeleteClaim("idp");
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
+                    options.ClaimActions.MapUniqueJsonKey("country", "country");
+                    options.ClaimActions.MapUniqueJsonKey("subscriptionlevel", "subscriptionlevel");
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
