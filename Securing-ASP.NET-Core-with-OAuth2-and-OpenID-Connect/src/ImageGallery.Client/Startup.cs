@@ -62,6 +62,7 @@ namespace ImageGallery.Client
                     options.Scope.Add("imagegalleryapi");
                     options.Scope.Add("country");
                     options.Scope.Add("subscriptionlevel");
+                    options.Scope.Add("offline_access");
                     options.ResponseType = "code id_token";
                     //options.CallbackPath = new PathString("");
                     //options.SignedOutCallbackPath = new PathString("");

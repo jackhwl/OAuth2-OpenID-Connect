@@ -84,6 +84,13 @@ namespace Marvin.IDP
                     //IdentityTokenLifetime = 300,
                     //AuthorizationCodeLifetime = 300,
                     AccessTokenLifetime = 120,
+                    //AbsoluteRefreshTokenLifetime = 30 days
+                    //RefreshTokenExpiration = TokenExpiration.Sliding,
+                    //SlidingRefreshTokenLifetime =  ...
+                    //RefreshTokenExpiration = TokenExpiration.Absolute;  default value
+
+                    UpdateAccessTokenClaimsOnRefresh = true,
+                    AllowOfflineAccess = true,
 
                     RedirectUris = new List<string>()
                     {

@@ -152,3 +152,5 @@ In the MustOwnImageHandler an instance of the repository is injected. That repos
 In Core 1, we could inject scoped services in singleton instances, but in Core 2 that's not allowed anymore. 
 To solve this, register the MustOwnImageHandler as scoped.
 
+RefreshTokenExpiration = TokenExpiration.Absolute;  default value
+
