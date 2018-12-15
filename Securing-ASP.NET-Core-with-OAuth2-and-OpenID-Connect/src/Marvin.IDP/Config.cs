@@ -80,6 +80,7 @@ namespace Marvin.IDP
                     ClientName = "Image Gallery",
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
+
                     RedirectUris = new List<string>()
                     {
                         "https://localhost:44351/signin-oidc"

@@ -142,3 +142,13 @@ in Client
                     policyBuilder.RequireClaim("subscriptionlevel", "PayingUser");
                 });
 
+Extending Authorization Policy,
+creating authorization extension or 
+
+Identity token lifetime default: 5 minutes, application implement their won expiration policies
+Access token lifetime default: 1hour the IDP controls the expiration policy
+
+In the MustOwnImageHandler an instance of the repository is injected. That repository is registered as a scoped service. 
+In Core 1, we could inject scoped services in singleton instances, but in Core 2 that's not allowed anymore. 
+To solve this, register the MustOwnImageHandler as scoped.
+
