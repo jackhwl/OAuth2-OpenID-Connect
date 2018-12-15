@@ -154,3 +154,5 @@ To solve this, register the MustOwnImageHandler as scoped.
 
 RefreshTokenExpiration = TokenExpiration.Absolute;  default value
 
+Reference token introspection endpoint
+
