@@ -81,6 +81,10 @@ namespace Marvin.IDP
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
 
+                    //IdentityTokenLifetime = 300,
+                    //AuthorizationCodeLifetime = 300,
+                    AccessTokenLifetime = 120,
+
                     RedirectUris = new List<string>()
                     {
                         "https://localhost:44351/signin-oidc"
