@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.28010.2050
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWCF", "HelloWCF\HelloWCF.csproj", "{FBA089DC-6717-4663-8887-2163C67A89E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWCFClient", "HelloWCFClient\HelloWCFClient.csproj", "{3E02BD1A-BAD1-4D8D-90E4-D4397096ED84}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FBA089DC-6717-4663-8887-2163C67A89E4} = {FBA089DC-6717-4663-8887-2163C67A89E4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{FBA089DC-6717-4663-8887-2163C67A89E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBA089DC-6717-4663-8887-2163C67A89E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBA089DC-6717-4663-8887-2163C67A89E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E02BD1A-BAD1-4D8D-90E4-D4397096ED84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E02BD1A-BAD1-4D8D-90E4-D4397096ED84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E02BD1A-BAD1-4D8D-90E4-D4397096ED84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E02BD1A-BAD1-4D8D-90E4-D4397096ED84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
