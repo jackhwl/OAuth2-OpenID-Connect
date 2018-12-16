@@ -61,6 +61,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Zza.Data\Zza.Data.csproj">
+      <Project>{bb1e80de-e6d1-4e29-bc2d-db66b81163c5}</Project>
+      <Name>Zza.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Zza.Entities\Zza.Entities.csproj">
+      <Project>{7ec71c6e-e769-4c9e-8327-c72b0724b1b7}</Project>
+      <Name>Zza.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <VSToolsPath Condition="'$(VSToolsPath)' == '' and '$(VisualStudioVersion)' != '' and '$(VisualStudioVersion)' != '11.0'">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

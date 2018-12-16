@@ -5,6 +5,7 @@ using System.Reflection;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using Zza.Entities;
 
 namespace Zza.Services
 {
@@ -14,7 +15,7 @@ namespace Zza.Services
         [OperationContract]
         List<Product> GetProducts();
         [OperationContract]
-        List<Customer> GetProducts();
+        List<Customer> GetCustomers();
         [OperationContract]
         void SubmitOrder(Order order);
     }
