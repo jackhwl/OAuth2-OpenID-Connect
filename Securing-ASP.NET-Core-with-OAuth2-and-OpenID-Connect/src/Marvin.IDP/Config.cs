@@ -84,6 +84,7 @@ namespace Marvin.IDP
                     ClientId = "imagegalleryclient",
                     AllowedGrantTypes = GrantTypes.Hybrid,
                     AccessTokenType = AccessTokenType.Reference,
+                    RequireConsent = false,
                     //IdentityTokenLifetime = 300,
                     //AuthorizationCodeLifetime = 300,
                     AccessTokenLifetime = 120,
