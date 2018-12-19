@@ -11,7 +11,7 @@ namespace Marvin.IDP
     {
         public static IIdentityServerBuilder AddMarvinUserStore(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddSingleton<IMarvinUserRepository, MarvinUserRepository>();
+            builder.Services.AddScoped<IMarvinUserRepository, MarvinUserRepository>();
             builder.AddProfileService<MarvinUserProfileService>();
             return builder;
         }
