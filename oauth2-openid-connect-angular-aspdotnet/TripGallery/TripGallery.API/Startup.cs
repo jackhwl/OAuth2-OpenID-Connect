@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TripGallery.API.Helpers;
 using System.Web.Http.Cors;
+using IdentityServer3.AccessTokenValidation;
 
 namespace TripGallery.API
 {
@@ -15,7 +16,13 @@ namespace TripGallery.API
 
         public void Configuration(IAppBuilder app)
         {
-          
+            app.UseIdentityServerBearerTokenAuthentication(
+                new IdentityServerBearerTokenAuthenticationOptions
+                {
+                    Authority = Constants.TripGallerySTS,
+                    RequiredScopes = new[] {"gallerymanagement"}
+                });
+
             var config = WebApiConfig.Register();
             
             app.UseWebApi(config);
