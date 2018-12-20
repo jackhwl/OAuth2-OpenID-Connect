@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<script>
+    // if the URI contains a #, try to process the token.
+    if (window.location.hash) {
+        processTokenCallback();
+    }
+
+    function processTokenCallback() {
+        debugger;
+        var hash = window.location.hash.substr(1);
+
+        var result = hash.split('&').reduce(function(result, item) {
+                var parts = item.split('=');
+                result[parts[0]] = parts[1];
+                return result;
+            },
+            {});
+
+        if (!result.error && result.access_token !== undefined) {
+            localStorage["access_token"] = result.access_token;
+
+            // redicrect
+            window.location = window.location.protocol + "//" + window.location.host + "/";
+        } else {
+            alert("Error: " + (error.message || error));
+        }
+    }
+</script>
+</body>
+</html>
