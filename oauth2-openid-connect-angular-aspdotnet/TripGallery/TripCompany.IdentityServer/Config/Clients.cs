@@ -12,7 +12,20 @@ namespace TripCompany.IdentityServer.Config
     {
         public static IEnumerable<Client> Get()
         { 
-            return new List<Client>(); 
+            return new List<Client>
+            {
+                new Client
+                {
+                    ClientId = "tripgalleryclientcredentials",
+                    ClientName = "Trip Gallery (Client Credentials)",
+                    Flow = Flows.ClientCredentials,
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret(TripGallery.Constants.TripGalleryClientSecret.Sha256())
+                    },
+                    AllowAccessToAllScopes = true,
+                }
+            }; 
         }
     }
 }
