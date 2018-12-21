@@ -6,7 +6,7 @@
      
      
 
-    app.config(function ($routeProvider) {
+    app.config(function ($routeProvider, $httpProvider) {
  
         $routeProvider            
             .when("/trips", {
@@ -29,8 +29,20 @@
                  templateUrl: "/app/trips/tripAlbum.html",
                  controller: "tripAlbumController as vm"
              })
-           .otherwise({ redirectTo: "/trips" });
-       
+            .otherwise({ redirectTo: "/trips" });
+
+        $httpProvider.interceptors.push(function(appSettings, tokenContainer) {
+            return {
+                'request': function(config) {
+                    //if it's a request to the API, we need to provide the access token as bearer token.
+                    if (config.url.indexOf(appSettings.tripGalleryAPI) === 0) {
+                        config.headers.Authorization = 'Bearer ' + tokenContainer.getToken().token;
+                    }
+
+                    return config;
+                }
+            }
+        })
     });
 
 
