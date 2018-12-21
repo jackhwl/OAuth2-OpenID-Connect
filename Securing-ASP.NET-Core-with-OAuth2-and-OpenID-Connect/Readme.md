@@ -34,7 +34,7 @@ The OP responds with an ID Token and usually an Access Token.
 The RP can send a request with the Access Token to the UserInfo Endpoint.
 The UserInfo Endpoint returns Claims about the End-User.
 These steps are illustrated in the following diagram:
-
+<pre>
 +--------+                                   +--------+
 |        |                                   |        |
 |        |---------(1) AuthN Request-------->|        |
@@ -53,7 +53,7 @@ These steps are illustrated in the following diagram:
 |        |<--------(5) UserInfo Response-----|        |
 |        |                                   |        |
 +--------+                                   +--------+
-
+</pre>
 
 the main reason to get user claims this way is to keep identity token small.	
 	
